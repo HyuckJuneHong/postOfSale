@@ -26,11 +26,25 @@ public class PostOfSaleApplication {
         memberDtoCreate2.setCheckPassword("1234");
         memberDtoCreate2.setMemberRole(MemberRole.ROLE_MANAGER);
         memberServiceImpl.signUp(memberDtoCreate2);
-
+        
         memberServiceImpl.printMember("mId1");
-        System.out.println();
         memberServiceImpl.printAllMember();
 
+        MemberDto.UPDATE update1 = new MemberDto.UPDATE();
+        update1.setIdentity("mId2");
+        update1.setOldPassword("1234");
+        update1.setNewPassword("2345");
+        update1.setCheckPassword("2345");
+        memberServiceImpl.updatePassword(update1);
+
+        memberServiceImpl.printMember("mId2");
+
+        MemberDto.DELETE delete1 = new MemberDto.DELETE();
+        delete1.setIdentity("mId2");
+        delete1.setPassword("2345");
+
+        memberServiceImpl.deleteMember(delete1);
+        memberServiceImpl.printMember("mId2");
     }
 
 }

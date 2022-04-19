@@ -30,7 +30,7 @@ public class MemberServiceImpl implements MemberService{
                 create.getIdentity(), create.getPassword(), create.getMemberRole());
 
         memberDao.insertMember(newMember);
-        System.out.println("회원가입 완료");
+        System.out.println("\n[아이디: " + newMember.getIdentity() + " 회원가입 완료]");
 
     }
 
@@ -57,7 +57,7 @@ public class MemberServiceImpl implements MemberService{
         member.updatePassword(update.getNewPassword());
 
         memberDao.updateMember(member);
-        System.out.println("비밀번호가 변경되었습니다.");
+        System.out.println("\n[" + member.getIdentity() + "님의 비밀번호가 변경되었습니다.]");
     }
 
     @Override
@@ -72,7 +72,7 @@ public class MemberServiceImpl implements MemberService{
         }
 
         memberDao.deleteMember(member);
-        System.out.println("아이디 삭제 완료");
+        System.out.println("\n[아이디 :" + member.getIdentity() + "삭제 완료]");
     }
 
     @Override
@@ -82,7 +82,8 @@ public class MemberServiceImpl implements MemberService{
             throw new BadRequestException("해당 아이디는 존재하지 않습니다.");
         }
 
-        System.out.println("멤버 아이디: " + member.getIdentity() + "\n멤버 권한: " + member.getMemberRole());
+        System.out.println("\n<직원 검색>");
+        System.out.println("멤버 코드: " + member.getCode() + "\n멤버 아이디: " + member.getIdentity() + "\n멤버 권한: " + member.getMemberRole());
     }
 
     @Override
@@ -90,8 +91,9 @@ public class MemberServiceImpl implements MemberService{
 
         ArrayList<MemberEntity> list =  new ArrayList<>(memberDao.findAllMember());
 
+        System.out.println("\n<총 직원 조회>");
         for(MemberEntity member : list){
-            System.out.println("멤버 아이디: " + member.getIdentity() + "\n멤버 권한: " + member.getMemberRole());
+            System.out.println("멤버 코드: " + member.getCode() + "\n멤버 아이디: " + member.getIdentity() + "\n멤버 권한: " + member.getMemberRole());
         }
         System.out.println("총 직원 수: " + list.size());
 
