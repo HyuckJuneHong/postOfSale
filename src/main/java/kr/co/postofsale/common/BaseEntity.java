@@ -1,6 +1,10 @@
 package kr.co.postofsale.common;
 
-public class BaseEntity {
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
+public class BaseEntity {
     protected long code;
 }
