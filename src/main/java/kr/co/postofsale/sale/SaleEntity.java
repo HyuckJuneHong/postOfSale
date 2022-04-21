@@ -1,4 +1,6 @@
 package kr.co.postofsale.sale;
 
-public class SaleEntity {
+import kr.co.postofsale.common.BaseEntity;
+
+public class SaleEntity extends BaseEntity {
 }

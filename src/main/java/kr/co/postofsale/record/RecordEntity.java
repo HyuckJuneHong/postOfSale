@@ -1,4 +1,6 @@
 package kr.co.postofsale.record;
 
-public class RecordEntity {
+import kr.co.postofsale.common.BaseEntity;
+
+public class RecordEntity extends BaseEntity {
 }

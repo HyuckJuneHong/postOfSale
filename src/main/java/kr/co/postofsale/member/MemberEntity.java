@@ -1,6 +1,5 @@
 package kr.co.postofsale.member;
 
-import kr.co.postofsale.common.BadRequestException;
 import kr.co.postofsale.common.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,7 +13,6 @@ public class MemberEntity extends BaseEntity {
     private String identity;
     private String password;
     private MemberRole memberRole;
-
 
     public void updateRole(MemberRole role){
         this.memberRole = role;
