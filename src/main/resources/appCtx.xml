@@ -8,9 +8,21 @@
     <context:annotation-config />
 
     <bean id="memberDao" class="kr.co.postofsale.member.MemberDao" />
+    <bean id="productDao" class="kr.co.postofsale.product.ProductDao" />
+    <bean id="saleDao" class="kr.co.postofsale.sale.SaleDao" />
 
     <bean id="memberServiceImpl" class="kr.co.postofsale.member.MemberServiceImpl" >
         <constructor-arg ref="memberDao"/>
     </bean>
+
+    <bean id="productServiceImpl" class="kr.co.postofsale.product.ProductServiceImpl" >
+        <constructor-arg ref="productDao" />
+    </bean>
+
+    <bean id="saleServiceImpl" class="kr.co.postofsale.sale.SaleServiceImpl" >
+        <constructor-arg ref="saleDao" />
+    </bean>
+
+
 
 </beans>

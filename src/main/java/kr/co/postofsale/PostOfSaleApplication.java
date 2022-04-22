@@ -28,7 +28,7 @@ public class PostOfSaleApplication {
                 .identity("mId2")
                 .password("1234")
                 .checkPassword("1234")
-                .memberRole(MemberRole.ROLE_MEMBER)
+                .memberRole(MemberRole.ROLE_MANAGER)
                 .build();
         memberServiceImpl.signUp(memberCreate2);
 

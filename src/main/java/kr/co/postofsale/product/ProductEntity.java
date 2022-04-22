@@ -20,7 +20,6 @@ public class ProductEntity extends BaseEntity {
     private Long totalAmount;
 
     @Builder
-
     public ProductEntity(String codeName, String productName, LocalDate insertDate, Long price, Long totalAmount) {
         this.codeName = codeName;
         this.productName = productName;
