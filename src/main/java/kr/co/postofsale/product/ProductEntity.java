@@ -2,21 +2,30 @@ package kr.co.postofsale.product;
 
 import kr.co.postofsale.common.BaseEntity;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
 public class ProductEntity extends BaseEntity {
 
-    private String CodeName;
+    private String codeName;
     private String productName;
-    private LocalDateTime insertDate;
+    private LocalDate insertDate;
     private Long price;
-    private Long amount;
-    private Long box;
     private Long totalAmount;
+
+    @Builder
+
+    public ProductEntity(String codeName, String productName, LocalDate insertDate, Long price, Long totalAmount) {
+        this.codeName = codeName;
+        this.productName = productName;
+        this.insertDate = insertDate;
+        this.price = price;
+        this.totalAmount = totalAmount;
+    }
 }

@@ -5,8 +5,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
@@ -14,9 +12,7 @@ import java.time.LocalDateTime;
 public class InsertDto {
     private String CodeName;
     private String productName;
-    private LocalDateTime insertDate;
     private Long price;
     private Long amount;
     private Long box;
-    private Long totalAmount;
 }

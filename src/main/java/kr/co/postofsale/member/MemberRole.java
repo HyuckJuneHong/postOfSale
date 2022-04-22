@@ -1,17 +1,16 @@
 package kr.co.postofsale.member;
 
+import lombok.AllArgsConstructor;
+
 import java.util.Arrays;
 
+@AllArgsConstructor
 public enum MemberRole {
 
     ROLE_MEMBER("직원"),
     ROLE_MANAGER("매니저");
 
     private String role;
-
-    MemberRole(String role) {
-        this.role = role;
-    }
 
     public static MemberRole of(String role){
         return Arrays.stream(MemberRole.values())

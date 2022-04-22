@@ -10,8 +10,12 @@ public class ProductDao {
 
     private Map<String, ProductEntity> map = new HashMap<>();
 
-    public void insertInventory(ProductEntity product){
+    public void addNewProduct(ProductEntity product){
         product.setCode(productCode++);
+        map.put(product.getCodeName(), product);
+    }
+
+    public void addProduct(ProductEntity product){
         map.put(product.getCodeName(), product);
     }
 
