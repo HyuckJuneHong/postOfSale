@@ -2,13 +2,24 @@ package kr.co.postofsale.sale;
 
 import kr.co.postofsale.product.ProductEntity;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class SaleDao {
 
     private static long saleCode = 0;
 
-    private Map<String, SaleEntity> map = new HashMap<>();
+    private List<SaleEntity> list = new ArrayList<>();
+    private Map<Long, List<SaleEntity>> map = new HashMap<>();
 
+    public void cart(SaleEntity sale){
+        list.add(sale);
+    }
+
+    public void shoppingEnd(){
+        map.put(saleCode++, list);
+    }
+
+    public List<SaleEntity> findByBuyList(){
+        return map.get(saleCode - 1);
+    }
 }

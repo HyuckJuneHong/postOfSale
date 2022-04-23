@@ -29,7 +29,7 @@ public class ProductServiceImpl implements ProductService {
                     .price(product.getPrice())
                     .totalAmount(product.getTotalAmount() + (insert.getAmount() * insert.getBox()))
                     .build();
-            productDao.addProduct(addProduct);
+            productDao.updateProduct(addProduct);
         }else{
             ProductEntity newProduct = ProductEntity.builder()
                     .codeName(insert.getCodeName())
@@ -41,6 +41,18 @@ public class ProductServiceImpl implements ProductService {
             productDao.addNewProduct(newProduct);
         }
         System.out.println("[제품명: " + insert.getProductName() + " 입고 완료]");
+    }
+
+    @Override
+    public void deleteProduct(String codeName) {
+        ProductEntity product = productDao.findByProduct(codeName);
+
+        System.out.println("\n<제품 삭제 서비스>");
+        if(product == null){
+            throw new BadRequestException("해당 상품은 이미 존재하지 않아 삭제에 실패하였습니다.");
+        }
+        System.out.println("[제품명: " + product.getProductName() + " 삭제 완료]");
+        productDao.deleteProduct(product);
     }
 
     @Override
@@ -67,7 +79,7 @@ public class ProductServiceImpl implements ProductService {
                     + product.getInsertDate() + "\n-가격: " + product.getPrice() + "\n-총량: " + product.getTotalAmount());
             System.out.println("---------------------------");
         }
-        System.out.println("[총 제품 수: " + list.size() + "]");
+        System.out.println("[총 제품 종류: " + list.size() + "]");
         System.out.println("---------------------------");
     }
 }

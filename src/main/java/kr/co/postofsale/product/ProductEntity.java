@@ -27,4 +27,8 @@ public class ProductEntity extends BaseEntity {
         this.price = price;
         this.totalAmount = totalAmount;
     }
+
+    public void updateAmount(Long totalAmount){
+        this.totalAmount = totalAmount;
+    }
 }

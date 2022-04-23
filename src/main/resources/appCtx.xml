@@ -21,6 +21,7 @@
 
     <bean id="saleServiceImpl" class="kr.co.postofsale.sale.SaleServiceImpl" >
         <constructor-arg ref="saleDao" />
+        <constructor-arg ref="productDao"/>
     </bean>
 
 

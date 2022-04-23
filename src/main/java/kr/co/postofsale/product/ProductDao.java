@@ -15,8 +15,12 @@ public class ProductDao {
         map.put(product.getCodeName(), product);
     }
 
-    public void addProduct(ProductEntity product){
+    public void updateProduct(ProductEntity product){
         map.put(product.getCodeName(), product);
+    }
+
+    public void deleteProduct(ProductEntity product){
+        map.remove(product.getCodeName());
     }
 
     public ProductEntity findByProduct(String codeName){
