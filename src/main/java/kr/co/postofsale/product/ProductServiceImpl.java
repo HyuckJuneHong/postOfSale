@@ -40,7 +40,7 @@ public class ProductServiceImpl implements ProductService {
                     .build();
             productDao.addNewProduct(newProduct);
         }
-        System.out.println("[제품명: " + insert.getProductName() + " 입고 완료]");
+        System.out.println("[" + insert.getProductName() + " 입고 완료]");
     }
 
     @Override

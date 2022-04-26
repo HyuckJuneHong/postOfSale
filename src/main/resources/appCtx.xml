@@ -10,6 +10,7 @@
     <bean id="memberDao" class="kr.co.postofsale.member.MemberDao" />
     <bean id="productDao" class="kr.co.postofsale.product.ProductDao" />
     <bean id="saleDao" class="kr.co.postofsale.sale.SaleDao" />
+    <bean id="recoredDao" class="kr.co.postofsale.record.RecordDao" />
 
     <bean id="memberServiceImpl" class="kr.co.postofsale.member.MemberServiceImpl" >
         <constructor-arg ref="memberDao"/>
@@ -22,6 +23,13 @@
     <bean id="saleServiceImpl" class="kr.co.postofsale.sale.SaleServiceImpl" >
         <constructor-arg ref="saleDao" />
         <constructor-arg ref="productDao"/>
+        <constructor-arg ref="recoredDao" />
+    </bean>
+
+    <bean id="recordServiceImpl" class="kr.co.postofsale.record.RecordServiceImpl">
+        <constructor-arg ref="recoredDao" />
+        <constructor-arg ref="productDao" />
+        <constructor-arg ref="saleDao" />
     </bean>
 
 

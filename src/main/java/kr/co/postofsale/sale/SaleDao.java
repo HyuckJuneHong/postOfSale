@@ -22,4 +22,8 @@ public class SaleDao {
     public List<SaleEntity> findByBuyList(){
         return map.get(saleCode - 1);
     }
+
+    public Map<Long, List<SaleEntity>> getMap() {
+        return map;
+    }
 }

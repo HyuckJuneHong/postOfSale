@@ -3,6 +3,7 @@ package kr.co.postofsale.sale;
 import kr.co.postofsale.common.BadRequestException;
 import kr.co.postofsale.product.ProductDao;
 import kr.co.postofsale.product.ProductEntity;
+import kr.co.postofsale.record.RecordDao;
 import kr.co.postofsale.sale.saleDto.PaymentDto;
 import kr.co.postofsale.sale.saleDto.SelectDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,11 +14,13 @@ public class SaleServiceImpl implements SaleService{
 
     private SaleDao saleDao;
     private ProductDao productDao;
+    private RecordDao recordDao;
 
     @Autowired
-    public SaleServiceImpl(SaleDao saleDao, ProductDao productDao) {
+    public SaleServiceImpl(SaleDao saleDao, ProductDao productDao, RecordDao recordDao) {
         this.saleDao = saleDao;
         this.productDao = productDao;
+        this.recordDao = recordDao;
     }
 
     @Override
@@ -71,6 +74,8 @@ public class SaleServiceImpl implements SaleService{
 
         System.out.println("총 금액: " + totalPrice + "->결제 방법: " + payment.getSalePayment());
         System.out.println("[이용해주셔서 감사합니다.]");
+
+        recordDao.createRecored(totalPrice);
     }
 
 }
