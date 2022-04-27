@@ -62,27 +62,180 @@ public class PostOfSaleApplication {
                     String click1 = bf1.readLine();
                     bf1.close();
                     if(click1.equals("1")){
+                        String[] information = new String[4];
+                        String[] resultArr = new String[4];
+                        information[0] = "원하는 아이디를 입력해주세요";
+                        information[1] = "원하는 비밀번호를 입력해주세요.";
+                        information[2] = "비밀번호를 확인해주세요.";
+                        information[3] = "권한을 입력바랍니다. (선택: \"직원\" or \"매니저\")";
 
+                        bufferedWriter.write(information[0]);
+                        bufferedWriter.flush();
+                        BufferedReader result1 = new BufferedReader(new InputStreamReader(System.in));
+                        resultArr[0] = result1.readLine();
+                        result1.close();
+
+                        bufferedWriter.write(information[1]);
+                        bufferedWriter.flush();
+                        BufferedReader result2 = new BufferedReader(new InputStreamReader(System.in));
+                        resultArr[1] = result2.readLine();
+                        result2.close();
+
+                        bufferedWriter.write(information[2]);
+                        bufferedWriter.flush();
+                        BufferedReader result3 = new BufferedReader(new InputStreamReader(System.in));
+                        resultArr[2] = result3.readLine();
+                        result3.close();
+
+                        bufferedWriter.write(information[3]);
+                        bufferedWriter.flush();
+                        BufferedReader result4 = new BufferedReader(new InputStreamReader(System.in));
+                        resultArr[3] = result4.readLine();
+                        result4.close();
+
+                        CreateDto memberCreate;
+
+                        if(resultArr[3].equals("직원")){
+                            memberCreate = CreateDto.builder()
+                                    .identity(resultArr[0])
+                                    .password(resultArr[1])
+                                    .checkPassword(resultArr[2])
+                                    .memberRole(MemberRole.ROLE_MEMBER)
+                                    .build();
+                        }else if(resultArr[3].equals("매니저")){
+                            memberCreate = CreateDto.builder()
+                                    .identity(resultArr[0])
+                                    .password(resultArr[1])
+                                    .checkPassword(resultArr[2])
+                                    .memberRole(MemberRole.ROLE_MANAGER)
+                                    .build();
+                        }else{
+                            String error = "회원가입 실패 (정보를 잘못 입력하셨습니다.) 처음 화면으로 돌아갑니다.";
+                            bufferedWriter.write(error);
+                            bufferedWriter.flush();
+                            continue;
+                        }
+                        memberServiceImpl.signUp(memberCreate);
                     }else if(click1.equals("2")){
+                        String[] information = new String[2];
+                        String[] resultArr = new String[2];
+                        information[0] = "삭제할 아이디를 입력해주세요";
+                        information[1] = "삭제할 아이디의 비밀번호를 입력해주세요.";
+
+                        bufferedWriter.write(information[0]);
+                        bufferedWriter.flush();
+                        BufferedReader result1 = new BufferedReader(new InputStreamReader(System.in));
+                        resultArr[0] = result1.readLine();
+                        result1.close();
+
+                        bufferedWriter.write(information[1]);
+                        bufferedWriter.flush();
+                        BufferedReader result2 = new BufferedReader(new InputStreamReader(System.in));
+                        resultArr[1] = result2.readLine();
+                        result2.close();
+
+                        DeleteDto memberDelete = DeleteDto.builder()
+                                .identity(resultArr[0])
+                                .password(resultArr[1])
+                                .build();
+                        memberServiceImpl.deleteMember(memberDelete);
 
                     }else if(click1.equals("3")){
 
+                        String[] information = new String[2];
+                        String[] resultArr = new String[2];
+                        information[0] = "아이디를 입력해주세요";
+                        information[1] = "비밀번호를 입력해주세요.";
+
+                        bufferedWriter.write(information[0]);
+                        bufferedWriter.flush();
+                        BufferedReader result1 = new BufferedReader(new InputStreamReader(System.in));
+                        resultArr[0] = result1.readLine();
+                        result1.close();
+
+                        bufferedWriter.write(information[1]);
+                        bufferedWriter.flush();
+                        BufferedReader result2 = new BufferedReader(new InputStreamReader(System.in));
+                        resultArr[1] = result2.readLine();
+                        result2.close();
+
+                        SignInDto login = SignInDto.builder()
+                                .identity(resultArr[0])
+                                .password(resultArr[1])
+                                .build();
+                        memberServiceImpl.signIn(login);
+
                     }else if(click1.equals("4")){
+                        String[] information = new String[4];
+                        String[] resultArr = new String[4];
+                        information[0] = "원하는 아이디를 입력해주세요.";
+                        information[1] = "현재 비밀번호를 입력해주세요.";
+                        information[2] = "변경할 비밀번호를 입력해주세요.";
+                        information[3] = "변경 비밀번호를 확인해주세요.";
+
+                        bufferedWriter.write(information[0]);
+                        bufferedWriter.flush();
+                        BufferedReader result1 = new BufferedReader(new InputStreamReader(System.in));
+                        resultArr[0] = result1.readLine();
+                        result1.close();
+
+                        bufferedWriter.write(information[1]);
+                        bufferedWriter.flush();
+                        BufferedReader result2 = new BufferedReader(new InputStreamReader(System.in));
+                        resultArr[1] = result2.readLine();
+                        result2.close();
+
+                        bufferedWriter.write(information[2]);
+                        bufferedWriter.flush();
+                        BufferedReader result3 = new BufferedReader(new InputStreamReader(System.in));
+                        resultArr[2] = result3.readLine();
+                        result3.close();
+
+                        bufferedWriter.write(information[3]);
+                        bufferedWriter.flush();
+                        BufferedReader result4 = new BufferedReader(new InputStreamReader(System.in));
+                        resultArr[3] = result4.readLine();
+                        result4.close();
+
+                        UpdatePasswordDto updatePassword = UpdatePasswordDto.builder()
+                                .identity(resultArr[0])
+                                .oldPassword(resultArr[1])
+                                .newPassword(resultArr[2])
+                                .checkPassword(resultArr[3])
+                                .build();
+                        memberServiceImpl.updatePassword(updatePassword);
 
                     }else if(click1.equals("5")){
+                        String information = "권한을 바꿀 아이디를 입력해주세요.";
+                        String result;
+                        bufferedWriter.write(information);
+                        bufferedWriter.flush();
+                        BufferedReader resultBf = new BufferedReader(new InputStreamReader(System.in));
+                        result = resultBf.readLine();
+                        resultBf.close();
+
+                        memberServiceImpl.updateRole(result);
 
                     }else if(click1.equals("6")){
+                        String information = "조회할 아이디를 입력해주세요.";
+                        String result;
+                        bufferedWriter.write(information);
+                        bufferedWriter.flush();
+                        BufferedReader resultBf = new BufferedReader(new InputStreamReader(System.in));
+                        result = resultBf.readLine();
+                        resultBf.close();
+
+                        memberServiceImpl.printMember(result);
 
                     }else if(click1.equals("7")){
 
+                        memberServiceImpl.printAllMember();             //모두 조회
                     }else{
                         String noMenu = "<처음으로 돌아갑니다.>";
                         bufferedWriter.write(noMenu);
                         bufferedWriter.flush();
                         continue;
                     }
-
-
                 }else if(clickMenu.equals("2")){
                     String productMenu ="<제품 서비스>\n" +
                             "1. 제품 삽입\n" +
@@ -154,53 +307,6 @@ public class PostOfSaleApplication {
             }
             break;
         }
-        //회원가입1
-        CreateDto memberCreate1 = CreateDto.builder()
-                .identity("mId1")
-                .password("1234")
-                .checkPassword("1234")
-                .memberRole(MemberRole.ROLE_MANAGER)
-                .build();
-        memberServiceImpl.signUp(memberCreate1);
-
-        //회원가입2
-        CreateDto memberCreate2 = CreateDto.builder()
-                .identity("mId2")
-                .password("1234")
-                .checkPassword("1234")
-                .memberRole(MemberRole.ROLE_MANAGER)
-                .build();
-        memberServiceImpl.signUp(memberCreate2);
-
-        memberServiceImpl.printMember("mId1");  //조회
-        memberServiceImpl.printAllMember();             //모두 조회
-
-        //비밀번호 변경
-        UpdatePasswordDto updatePassword1 = UpdatePasswordDto.builder()
-                .identity("mId2")
-                .oldPassword("1234")
-                .newPassword("2345")
-                .checkPassword("2345")
-                .build();
-        memberServiceImpl.updatePassword(updatePassword1);
-
-        memberServiceImpl.printMember("mId2");  //조회
-        memberServiceImpl.updateRole("mId1");   //권한 변경
-        memberServiceImpl.printMember("mId1");  //조회
-
-        //로그인
-        SignInDto login = SignInDto.builder()
-                .identity("mId1")
-                .password("1234")
-                .build();
-        memberServiceImpl.signIn(login);
-
-        //아이디 삭제
-        DeleteDto memberDelete1 = DeleteDto.builder()
-                .identity("mId2")
-                .password("2345")
-                .build();
-        memberServiceImpl.deleteMember(memberDelete1);
 
         //제품 삽입
         InsertDto insertDto1 = InsertDto.builder()
