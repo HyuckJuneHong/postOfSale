@@ -23,7 +23,4 @@ public class SaleDao {
         return map.get(saleCode - 1);
     }
 
-    public Map<Long, List<SaleEntity>> getMap() {
-        return map;
-    }
 }

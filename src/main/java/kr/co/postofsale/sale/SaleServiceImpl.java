@@ -16,6 +16,7 @@ public class SaleServiceImpl implements SaleService{
     private ProductDao productDao;
     private RecordDao recordDao;
 
+
     @Autowired
     public SaleServiceImpl(SaleDao saleDao, ProductDao productDao, RecordDao recordDao) {
         this.saleDao = saleDao;
@@ -46,6 +47,8 @@ public class SaleServiceImpl implements SaleService{
             System.out.println("[장바구니에 제품: " + sale.getBuyProductName() + " (을/를) "
                     + sale.getBuyAmount() + "개 담았습니다.]");
 
+            recordDao.updateRecord(product, sale);
+
             long totalAmount = product.getTotalAmount() - select.getBuyAmount();
             if(totalAmount == 0){
                 productDao.deleteProduct(product);
@@ -75,7 +78,7 @@ public class SaleServiceImpl implements SaleService{
         System.out.println("총 금액: " + totalPrice + "->결제 방법: " + payment.getSalePayment());
         System.out.println("[이용해주셔서 감사합니다.]");
 
-        recordDao.createRecored(totalPrice);
+        recordDao.totalSales += totalPrice;
     }
 
 }
