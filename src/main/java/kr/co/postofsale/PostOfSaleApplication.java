@@ -32,11 +32,12 @@ public class PostOfSaleApplication {
 
             try {
                 BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(System.out));
-                String startMenu = "어서오세요. 아래에서 원하시는 서비스를 선택해주세요.\n" +
+                String startMenu = "\n어서오세요. 아래에서 원하시는 서비스를 선택해주세요.\n" +
                         "1. 회원 서비스 메뉴\n" +
                         "2. 제품 서비스 메뉴\n" +
                         "3. 판매 서비스 메뉴\n" +
-                        "4. 나가기 메뉴";
+                        "4. 통계 서비스 메뉴\n" +
+                        "5. 나가기 메뉴";
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
 
                 while (true) {
@@ -340,14 +341,18 @@ public class PostOfSaleApplication {
                             continue;
                         }
 
-                    } else if (clickMenu.equals("4")) {
+                    }else if (clickMenu.equals("4")){
+                        recordDao.maxProduct();
+                        continue;
+
+                    } else if (clickMenu.equals("5")) {
                         String hello = "\n<이용해 주셔서 감사합니다. 안녕히 가세요.>";
                         bufferedWriter.write(hello);
                         bufferedWriter.flush();
                         break;
 
                     } else {
-                        String noMenu = "\n<없는 메뉴 입니다. 1, 2, 3, 4 중에 눌러 주세요.>";
+                        String noMenu = "\n<없는 메뉴 입니다. 1, 2, 3, 4, 5 중에 눌러 주세요.>";
                         bufferedWriter.write(noMenu);
                         bufferedWriter.flush();
                         continue;
@@ -360,7 +365,6 @@ public class PostOfSaleApplication {
                 e.printStackTrace();
                 throw new BadRequestException(e.getMessage());
             }
-            recordDao.maxProduct();
     }
 
 }
