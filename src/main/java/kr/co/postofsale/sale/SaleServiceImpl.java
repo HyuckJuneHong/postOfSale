@@ -8,6 +8,10 @@ import kr.co.postofsale.sale.saleDto.PaymentDto;
 import kr.co.postofsale.sale.saleDto.SelectDto;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.List;
 
 public class SaleServiceImpl implements SaleService{
@@ -63,22 +67,47 @@ public class SaleServiceImpl implements SaleService{
     @Override
     public void payment(PaymentDto payment) {
 
-        saleDao.shoppingEnd();
-        List<SaleEntity> list = saleDao.findByBuyList();
-        Long totalPrice = 0L;
+        try {
+            File saleFile = new File("/Users/hongyeongjune/postofsale/sale.txt");
 
-        System.out.println("\n<구매 목록>");
-        for(SaleEntity sale : list){
-            System.out.println("-" + sale.getBuyProductName() + " " + sale.getBuyAmount() + "개"
-                    + " " + sale.getTotalPrice() + "원");
-            totalPrice += sale.getTotalPrice();
+            if (!saleFile.exists()) {
+                saleFile.createNewFile();
+            }
+
+            FileWriter saleFw = new FileWriter(saleFile);
+            BufferedWriter saleBw = new BufferedWriter(saleFw);
+
+            saleDao.shoppingEnd();
+            List<SaleEntity> list = saleDao.findByBuyList();
+            Long totalPrice = 0L;
+
+            System.out.println("\n<구매 목록>");
+            saleBw.write("<판매 기록>\nNAME: ");
+            for(SaleEntity sale : list){
+                System.out.println("-" + sale.getBuyProductName() + " " + sale.getBuyAmount() + "개"
+                        + " " + sale.getTotalPrice() + "원");
+                totalPrice += sale.getTotalPrice();
+
+                saleBw.write(sale.getBuyProductName() + "\nCODE: "
+                        + sale.getBuyCodeName() + "\nAMOUNT: "
+                        + sale.getBuyAmount() + "\nPRICE: "
+                        + sale.getTotalPrice());
+            }
+
+            System.out.println("총 금액: " + totalPrice + "->결제 방법: " + payment.getSalePayment());
+            System.out.println("[이용해주셔서 감사합니다.]");
+            saleBw.write("\n총 금액: " + totalPrice +
+                    "\n결제 방법: " + payment.getSalePayment());
+            saleBw.flush();
+            saleBw.close();
+
+            recordDao.totalSales += totalPrice;
+
+
+        }catch (IOException e){
+            e.printStackTrace();
+            throw new BadRequestException(e.getMessage());
         }
-
-
-        System.out.println("총 금액: " + totalPrice + "->결제 방법: " + payment.getSalePayment());
-        System.out.println("[이용해주셔서 감사합니다.]");
-
-        recordDao.totalSales += totalPrice;
     }
 
 }

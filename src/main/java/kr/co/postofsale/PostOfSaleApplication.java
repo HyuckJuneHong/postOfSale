@@ -18,7 +18,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.GenericXmlApplicationContext;
 
 import java.io.*;
-
+///
 public class PostOfSaleApplication {
 
     public static void main(String[] args) {
@@ -31,6 +31,29 @@ public class PostOfSaleApplication {
 
 
             try {
+
+                File memberFile = new File("/Users/hongyeongjune/postofsale/member.txt");
+                File productFile = new File("/Users/hongyeongjune/postofsale/product.txt");
+                File recordFile = new File("/Users/hongyeongjune/postofsale/record.txt");
+
+                if (!memberFile.exists()) {
+                    memberFile.createNewFile();
+                }
+                if (!productFile.exists()) {
+                    productFile.createNewFile();
+                }
+                if (!recordFile.exists()) {
+                    recordFile.createNewFile();
+                }
+
+                FileWriter memberFw = new FileWriter(memberFile);
+                FileWriter productFw = new FileWriter(productFile);
+                FileWriter recordFw = new FileWriter(recordFile);
+
+                BufferedWriter memberBw = new BufferedWriter(memberFw);
+                BufferedWriter productBw = new BufferedWriter(productFw);
+                BufferedWriter recordBw = new BufferedWriter(recordFw);
+
                 BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(System.out));
                 String startMenu = "\n어서오세요. 아래에서 원하시는 서비스를 선택해주세요.\n" +
                         "1. 회원 서비스 메뉴\n" +
@@ -69,7 +92,7 @@ public class PostOfSaleApplication {
                             information[0] = "\n원하는 아이디를 입력해주세요";
                             information[1] = "원하는 비밀번호를 입력해주세요.";
                             information[2] = "비밀번호를 확인해주세요.";
-                            information[3] = "권한을 입력바랍니다. (선택: \"직원\" or \"매니저\")";
+                            information[3] = "권한을 입력바랍니다. (선택: \"member\" or \"manager\")";
 
                             for (int i = 0; i < information.length; i++) {
                                 bufferedWriter.write(information[i]);
@@ -80,14 +103,14 @@ public class PostOfSaleApplication {
 
                             CreateDto memberCreate;
 
-                            if (resultArr[3].equals("직원")) {
+                            if (resultArr[3].equals("member")) {
                                 memberCreate = CreateDto.builder()
                                         .identity(resultArr[0])
                                         .password(resultArr[1])
                                         .checkPassword(resultArr[2])
                                         .memberRole(MemberRole.ROLE_MEMBER)
                                         .build();
-                            } else if (resultArr[3].equals("매니저")) {
+                            } else if (resultArr[3].equals("manager")) {
                                 memberCreate = CreateDto.builder()
                                         .identity(resultArr[0])
                                         .password(resultArr[1])
@@ -102,6 +125,10 @@ public class PostOfSaleApplication {
                             }
 
                             memberServiceImpl.signUp(memberCreate);
+                            memberBw.write("<회원가입>\nID: " + memberCreate.getIdentity() + "\nPW: "
+                                    + memberCreate.getPassword() + "\nROLE: "
+                                    + memberCreate.getMemberRole() + "\n\n");
+                            memberBw.flush();
                             continue;
 
                         } else if (click1.equals("2")) {
@@ -122,6 +149,8 @@ public class PostOfSaleApplication {
                                     .password(resultArr[1])
                                     .build();
                             memberServiceImpl.deleteMember(memberDelete);
+                            memberBw.write("<회원 탈퇴>\nID: " + memberDelete.getIdentity() + "\n\n");
+                            memberBw.flush();
                             continue;
 
                         } else if (click1.equals("3")) {
@@ -143,6 +172,9 @@ public class PostOfSaleApplication {
                                     .password(resultArr[1])
                                     .build();
                             memberServiceImpl.signIn(login);
+                            memberBw.write("<로그인>\nID: " + login.getIdentity() + "\n\n");
+                            memberBw.flush();
+
                             continue;
 
                         } else if (click1.equals("4")) {
@@ -167,6 +199,10 @@ public class PostOfSaleApplication {
                                     .checkPassword(resultArr[3])
                                     .build();
                             memberServiceImpl.updatePassword(updatePassword);
+                            memberBw.write("<비번 변경>\nID: " + updatePassword.getIdentity() + "\nOld PW: "
+                                    + updatePassword.getOldPassword() + "\nNew PW: "
+                                    + updatePassword.getNewPassword() + "\n\n");
+                            memberBw.flush();
                             continue;
 
                         } else if (click1.equals("5")) {
@@ -178,6 +214,9 @@ public class PostOfSaleApplication {
                             result = resultBf.readLine();
 
                             memberServiceImpl.updateRole(result);
+                            memberBw.write("<권한 변경>\nID: " + result + "\n\n");
+                            memberBw.flush();
+
                             continue;
 
                         } else if (click1.equals("6")) {
@@ -241,6 +280,12 @@ public class PostOfSaleApplication {
                                     .CodeName(resultArr[4])
                                     .build();
                             productServiceImpl.insertProduct(insertDto);
+                            productBw.write("<제품 삽입>\nCODE: " + insertDto.getCodeName() + "\nNAME: "
+                                    + insertDto.getProductName() + "\nTotal AMOUNT: "
+                                    + Long.toString(insertDto.getAmount()*insertDto.getBox()) + "\nPRICE: "
+                                    + Long.toString(insertDto.getPrice()) + "\n\n");
+                            productBw.flush();
+
                             continue;
 
                         } else if (click2.equals("2")) {
@@ -252,6 +297,9 @@ public class PostOfSaleApplication {
                             result = resultBf.readLine();
 
                             productServiceImpl.deleteProduct(result);
+                            productBw.write("<제품 삭제>\nCODE: " + result + "\n\n");
+                            productBw.flush();
+
                             continue;
 
                         } else if (click2.equals("3")) {
@@ -309,19 +357,19 @@ public class PostOfSaleApplication {
                             continue;
 
                         } else if (click3.equals("2")) {
-                            String information = "\n결제 방법을 적어주세요. (단, \"현금\" or \"카드\")";
+                            String information = "\n결제 방법을 적어주세요. (단, \"cash\" or \"card\")\n[cash=현금 / card=카드)";
                             String result;
                             bufferedWriter.write(information);
                             bufferedWriter.flush();
                             BufferedReader resultBf = new BufferedReader(new InputStreamReader(System.in));
                             result = resultBf.readLine();
 
-                            if (result.equals("카드")) {
+                            if (result.equals("card")) {
                                 PaymentDto paymentDto = PaymentDto.builder()
                                         .salePayment(SalePayment.CARD)
                                         .build();
                                 saleServiceImpl.payment(paymentDto);
-                            } else if (result.equals("현금")) {
+                            } else if (result.equals("cash")) {
                                 PaymentDto paymentDto = PaymentDto.builder()
                                         .salePayment(SalePayment.CASH)
                                         .build();
@@ -343,6 +391,7 @@ public class PostOfSaleApplication {
 
                     }else if (clickMenu.equals("4")){
                         recordDao.maxProduct();
+                        recordBw.write(Long.toString(RecordDao.totalSales));
                         continue;
 
                     } else if (clickMenu.equals("5")) {
@@ -361,6 +410,9 @@ public class PostOfSaleApplication {
                 }
                 bufferedWriter.close();
                 bufferedReader.close();
+                memberBw.close();
+                productBw.close();
+                recordBw.close();
             }catch (IOException e) {
                 e.printStackTrace();
                 throw new BadRequestException(e.getMessage());
