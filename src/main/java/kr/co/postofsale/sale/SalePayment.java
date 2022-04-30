@@ -16,6 +16,6 @@ public enum SalePayment {
     public static SalePayment of(String payment){
         return Arrays.stream(SalePayment.values())
                 .filter(r->r.toString().equalsIgnoreCase(payment))
-                .findAny().orElseThrow(()-> new RuntimeException("카드 혹은 현금에서 골라주세요."));
+                .findAny().orElseThrow(()-> new RuntimeException("card(카드) 혹은 cash(현금)에서 골라주세요."));
     }
 }

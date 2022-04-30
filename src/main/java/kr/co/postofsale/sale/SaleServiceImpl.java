@@ -82,13 +82,13 @@ public class SaleServiceImpl implements SaleService{
             Long totalPrice = 0L;
 
             System.out.println("\n<구매 목록>");
-            saleBw.write("<판매 기록>\nNAME: ");
+            saleBw.write("\n<판매 기록>");
             for(SaleEntity sale : list){
                 System.out.println("-" + sale.getBuyProductName() + " " + sale.getBuyAmount() + "개"
                         + " " + sale.getTotalPrice() + "원");
                 totalPrice += sale.getTotalPrice();
 
-                saleBw.write(sale.getBuyProductName() + "\nCODE: "
+                saleBw.write("\nNAME: " + sale.getBuyProductName() + "\nCODE: "
                         + sale.getBuyCodeName() + "\nAMOUNT: "
                         + sale.getBuyAmount() + "\nPRICE: "
                         + sale.getTotalPrice());
