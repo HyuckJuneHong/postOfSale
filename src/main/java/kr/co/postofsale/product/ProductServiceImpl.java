@@ -1,6 +1,6 @@
 package kr.co.postofsale.product;
 
-import kr.co.postofsale.common.BadRequestException;
+import kr.co.postofsale.infrastructure.exception.BadRequestException;
 import kr.co.postofsale.product.productDto.InsertDto;
 import org.springframework.beans.factory.annotation.Autowired;
 

@@ -1,4 +1,4 @@
-package kr.co.postofsale.common;
+package kr.co.postofsale.infrastructure.exception;
 
 public class BadRequestException extends RuntimeException{
     public BadRequestException(String message){

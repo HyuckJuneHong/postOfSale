@@ -1,6 +1,5 @@
 package kr.co.postofsale.sale;
 
-import kr.co.postofsale.member.MemberRole;
 import lombok.AllArgsConstructor;
 
 import java.util.Arrays;

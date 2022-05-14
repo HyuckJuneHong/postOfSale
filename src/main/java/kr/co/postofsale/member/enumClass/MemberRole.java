@@ -1,4 +1,4 @@
-package kr.co.postofsale.member;
+package kr.co.postofsale.member.enumClass;
 
 import lombok.AllArgsConstructor;
 
@@ -7,8 +7,9 @@ import java.util.Arrays;
 @AllArgsConstructor
 public enum MemberRole {
 
-    ROLE_MEMBER("직원"),
-    ROLE_MANAGER("매니저");
+    ROLE_MEMBER("MEMBER"),
+    ROLE_MANAGER("MANAGER"),
+    ROLE_ADMIN("ADMIN");
 
     private String role;
 

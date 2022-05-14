@@ -1,7 +1,8 @@
 package kr.co.postofsale.member;
 
 import kr.co.postofsale.common.BaseEntity;
-import lombok.AllArgsConstructor;
+import kr.co.postofsale.member.enumClass.Gender;
+import kr.co.postofsale.member.enumClass.MemberRole;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,6 +13,10 @@ public class MemberEntity extends BaseEntity {
 
     private String identity;
     private String password;
+    private String name;
+    private String phone;
+    private String birth;
+    private Gender gender;
     private MemberRole memberRole;
 
     @Builder

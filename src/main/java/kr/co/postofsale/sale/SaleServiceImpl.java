@@ -1,6 +1,6 @@
 package kr.co.postofsale.sale;
 
-import kr.co.postofsale.common.BadRequestException;
+import kr.co.postofsale.infrastructure.exception.BadRequestException;
 import kr.co.postofsale.product.ProductDao;
 import kr.co.postofsale.product.ProductEntity;
 import kr.co.postofsale.record.RecordDao;

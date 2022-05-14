@@ -1,154 +1,162 @@
 package kr.co.postofsale.member;
 
-import kr.co.postofsale.common.BadRequestException;
-import kr.co.postofsale.member.memberDto.CreateDto;
-import kr.co.postofsale.member.memberDto.DeleteDto;
-import kr.co.postofsale.member.memberDto.SignInDto;
-import kr.co.postofsale.member.memberDto.UpdatePasswordDto;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import kr.co.postofsale.infrastructure.exception.BadRequestException;
+import kr.co.postofsale.infrastructure.interceptor.MemberThreadLocal;
+import kr.co.postofsale.infrastructure.security.jwt.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.lang.reflect.Member;
 
+@Service
 public class MemberServiceImpl implements MemberService{
 
-    private MemberDao memberDao;
-
     @Autowired
-    public MemberServiceImpl(MemberDao memberDao) {
-        this.memberDao = memberDao;
+    private JwtTokenProvider jwtTokenProvider;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    /**
+     * 로그인 서비스
+     * @param login
+     * @return
+     */
+    @Override
+    @Transactional
+    public MemberDto.TOKEN login(MemberDto.LOGIN login){
+
+        Member member = memberRepository.findByIdentity(login.getIdentity())
+                .orElseThrow(() -> new NotFoundException("MemberEntity"));
+
+        //boolean matches(rP, eP) : 저장소에서 얻은 인코딩된 암호도 인코딩된 원시 암호화 일치하는지 확인하는 메소드 (절대 디코딩되지 않음)
+        if(!passwordEncoder.matches(login.getPassword(), member.getPassword())){
+            throw new BadRequestException("비밀번호 일치하지 않음");
+        }
+
+        String[] tokens = generateToken(member);
+
+        member.updateRefreshToken(tokens[1]);
+
+        return new MemberDto.TOKEN(tokens[0], tokens[1]);
     }
 
+
+    /**
+     * 비밀번호 재확인 메소드
+     * @param password
+     * @return
+     */
     @Override
-    public void signUp(CreateDto create) {
-        MemberEntity member = memberDao.findByMember(create.getIdentity());
+    public boolean reCheckPassword(String password){
+        //boolean matches(rP, eP) : 저장소에서 얻은 인코딩된 암호도 인코딩된 원시 암호화 일치하는지 확인하는 메소드 (절대 디코딩되지 않음)
+        return passwordEncoder.matches(password, MemberThreadLocal.get().getPassword());
+    }
 
-        System.out.println("\n<회원가입 서비스>");
-        if(member != null){
-            throw new BadRequestException("해당 아이디는 이미 존재하는 아이디입니다.");
+    /**
+     * 비밀번호 초기화 확인 메서드
+     * @param reset
+     * @return
+     */
+    @Override
+    public boolean resetPasswordCheck(MemberDto.RESET_CHECK reset){
+        return memberRepository.existsByIdentityAndNameAndBirthDay(reset.getIdentity(), reset.getName(), reset.getBirth());
+    }
+
+    /**
+     * 비밀번호 초기화 메소드
+     * @param reset_password
+     */
+    @Override
+    public void resetPassword(MemberDto.RESET_PASSWORD reset_password) {
+        if(!reset_password.getNewPassword().equals(reset_password.getReNewPassword())) {
+            throw new BadRequestException("변경하려는 비밀번호가 서로 일치하지 않습니다.");
         }
 
-        if(!create.getCheckPassword().equals(create.getPassword())){
-            throw new BadRequestException("비밀번호와 확인 비밀번호가 일치하지 않습니다.");
+        Member member = memberRepository.findByIdentity(reset_password.getIdentity())
+                .orElseThrow(() -> new NotFoundException("MemberEntity"));
+        member.updatePassword(passwordEncoder.encode(reset_password.getNewPassword()));
+        memberRepository.save(member);
+    }
+
+    /**
+     * 아이디 중복 체크
+     * @param identity
+     * @return
+     */
+    @Override
+    public boolean checkIdentity(String identity){
+        return memberRepository.existsByIdentity(identity);
+    }
+
+
+    /**
+     * 회원 가입 서비스
+     * @param create
+     * @return
+     */
+    @Override
+    public void signUp(MemberDto.CREATE create){
+
+        if(checkIdentity(create.getIdentity())){
+            throw new BadRequestException("중복");
         }
 
-        MemberEntity newMember = MemberEntity.builder()
+        memberRepository.save(Member.builder()
                 .identity(create.getIdentity())
                 .password(create.getPassword())
+                .name(create.getName())
+                .gender(create.getGender())
+                .birthDay(create.getBirthDay())
+                .phone(create.getPhone())
                 .memberRole(create.getMemberRole())
-                .build();
-
-        memberDao.insertMember(newMember);
-        System.out.println("[아이디: " + newMember.getIdentity() + " 회원가입 완료]");
-
+                .build());
     }
 
+    /**
+     * 고객 정보 수정 서비스
+     * @param update
+     * @return
+     */
     @Override
-    public void updatePassword(UpdatePasswordDto update) {
-        MemberEntity member = memberDao.findByMember(update.getIdentity());
+    public void updateMember(MemberDto.UPDATE update){
 
-        System.out.println("\n<비밀번호 변경 서비스>");
-        if(member == null){
-            throw new BadRequestException("해당 아이디는 존재하지 않습니다.");
-        }
-
-        if(!member.getPassword().equals(update.getOldPassword())){
-            throw new BadRequestException("비밀번호가 일치하지 않습니다.");
-        }
-
-        if(member.getPassword().equals(update.getNewPassword())){
-            throw new BadRequestException("예전 비밀번호와 일치합니다.");
-        }
-
-        if(!update.getNewPassword().equals(update.getCheckPassword())){
-            throw new BadRequestException("새 비밀번호와 확인 비밀번호가 일치하지 않습니다.");
-        }
-
-        member.updatePassword(update.getNewPassword());
-
-        memberDao.updateMember(member);
-        System.out.println("[" + member.getIdentity() + "님의 비밀번호가 변경되었습니다.]");
+        Member member = MemberThreadLocal.get();
+        member.updateMember(update);
+        memberRepository.save(member);
     }
 
+    /**
+     * 비밀번호 변경 서비스
+     * @param update_password
+     * @return
+     */
     @Override
-    public void updateRole(String identity) {
-        MemberEntity member = memberDao.findByMember(identity);
+    public void updatePassword(MemberDto.UPDATE_PASSWORD update_password) {
 
-        System.out.println("\n<권한 변경 서비스>");
-        if(member == null){
-            throw new BadRequestException("해당 아이디는 존재하지 않습니다.");
+        Member member = MemberThreadLocal.get();
+        if(!passwordEncoder.matches(update_password.getPassword(), member.getPassword())){
+            throw new BadRequestException("비밀번호가 올바르지 않습니다.");
         }
 
-        if(member.getMemberRole().equals(MemberRole.ROLE_MEMBER)) {
-            member.updateRole(MemberRole.ROLE_MANAGER);
+        if(!update_password.getNewPassword().equals(update_password.getReNewPassword())){
+            throw new BadRequestException("새 비밀번호가 일치하지 않습니다.");
         }
-        if(member.getMemberRole().equals(MemberRole.ROLE_MANAGER)){
-            member.updateRole(MemberRole.ROLE_MEMBER);
-        }
-        System.out.println("[" + member.getIdentity() + "님의 권한이 변경되었습니다.]");
-        memberDao.updateMember(member);
 
+        member.updatePassword(passwordEncoder.encode(update_password.getNewPassword()));
+        memberRepository.save(member);
     }
 
-    @Override
-    public void deleteMember(DeleteDto delete) {
-        MemberEntity member = memberDao.findByMember(delete.getIdentity());
+    /**
+     * 토큰 발급 서비스
+     * @param member
+     * @return
+     */
+    private String[] generateToken(Member member) {
+        String accessToken = jwtTokenProvider.createAccessToken(member.getIdentity(), member.getMemberRole(), member.getName());
+        String refreshToken = jwtTokenProvider.createRefreshToken(member.getIdentity(), member.getMemberRole(), member.getName());
 
-        System.out.println("\n<삭제 서비스>");
-        if(member == null){
-            throw new BadRequestException("해당 아이디는 존재하지 않습니다.");
-        }
-        if(!member.getPassword().equals(delete.getPassword())){
-            throw new BadRequestException("비밀번호가 일치하지 않습니다.");
-        }
-
-        memberDao.deleteMember(member);
-        System.out.println("[아이디 :" + member.getIdentity() + "삭제 완료]");
+        return new String[]{accessToken, refreshToken};
     }
-
-    @Override
-    public void signIn(SignInDto login) {
-        MemberEntity member = memberDao.findByMember(login.getIdentity());
-
-        System.out.println("\n<로그인 서비스>");
-        if(member == null){
-            throw new BadRequestException("존재하지 않는 아이디입니다.");
-        }
-
-        if(!member.getPassword().equals(login.getPassword())){
-            throw new BadRequestException("비밀번호가 일치하지 않습니다.");
-        }
-
-        System.out.println("[" + member.getIdentity() + "님이 로그인하셨습니다.]");
-    }
-
-    @Override
-    public void printMember(String identity) {
-        MemberEntity member = memberDao.findByMember(identity);
-
-        System.out.println("\n<직원 조회 서비스>");
-        if(member == null){
-            throw new BadRequestException("해당 아이디는 존재하지 않습니다.");
-        }
-        System.out.println("-멤버 코드: " + member.getCode() + "\n-멤버 아이디: " + member.getIdentity()
-                + "\n-멤버 권한: " + member.getMemberRole());
-    }
-
-    @Override
-    public void printAllMember() {
-
-        ArrayList<MemberEntity> list =  new ArrayList<>(memberDao.findAllMember());
-
-        System.out.println("\n<총 직원 조회 서비스>");
-        System.out.println("---------------------------");
-        for(MemberEntity member : list){
-            System.out.println("-멤버 코드: " + member.getCode() + "\n-멤버 아이디: " + member.getIdentity()
-                    + "\n-멤버 권한: " + member.getMemberRole());
-            System.out.println("---------------------------");
-        }
-        System.out.println("[총 직원 수: " + list.size() + "]");
-        System.out.println("---------------------------");
-
-    }
-
-
 }
