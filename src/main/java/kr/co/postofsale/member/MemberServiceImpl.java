@@ -1,6 +1,5 @@
 package kr.co.postofsale.member;
 
-import io.swagger.v3.oas.annotations.media.ArraySchema;
 import kr.co.postofsale.infrastructure.exception.BadRequestException;
 import kr.co.postofsale.infrastructure.interceptor.MemberThreadLocal;
 import kr.co.postofsale.infrastructure.security.jwt.JwtTokenProvider;
@@ -9,10 +8,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Member;
+import java.util.List;
 
 @Service
 public class MemberServiceImpl implements MemberService{
 
+    @Autowired
+    private MemberDao memberDao;
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
     @Autowired
@@ -27,7 +29,7 @@ public class MemberServiceImpl implements MemberService{
     @Transactional
     public MemberDto.TOKEN login(MemberDto.LOGIN login){
 
-        Member member = memberRepository.findByIdentity(login.getIdentity())
+        Member member = memberDao.findByIdentity(login.getIdentity())
                 .orElseThrow(() -> new NotFoundException("MemberEntity"));
 
         //boolean matches(rP, eP) : 저장소에서 얻은 인코딩된 암호도 인코딩된 원시 암호화 일치하는지 확인하는 메소드 (절대 디코딩되지 않음)
@@ -40,6 +42,16 @@ public class MemberServiceImpl implements MemberService{
         member.updateRefreshToken(tokens[1]);
 
         return new MemberDto.TOKEN(tokens[0], tokens[1]);
+    }
+
+    /**
+     * 아이디 중복 체크
+     * @param identity
+     * @return
+     */
+    @Override
+    public boolean checkIdentity(String identity){
+        return memberDao.existsByIdentity(identity);
     }
 
 
@@ -61,35 +73,8 @@ public class MemberServiceImpl implements MemberService{
      */
     @Override
     public boolean resetPasswordCheck(MemberDto.RESET_CHECK reset){
-        return memberRepository.existsByIdentityAndNameAndBirthDay(reset.getIdentity(), reset.getName(), reset.getBirth());
+        return memberDao.existsByIdentityAndNameAndBirthDay(reset.getIdentity(), reset.getName(), reset.getBirth());
     }
-
-    /**
-     * 비밀번호 초기화 메소드
-     * @param reset_password
-     */
-    @Override
-    public void resetPassword(MemberDto.RESET_PASSWORD reset_password) {
-        if(!reset_password.getNewPassword().equals(reset_password.getReNewPassword())) {
-            throw new BadRequestException("변경하려는 비밀번호가 서로 일치하지 않습니다.");
-        }
-
-        Member member = memberRepository.findByIdentity(reset_password.getIdentity())
-                .orElseThrow(() -> new NotFoundException("MemberEntity"));
-        member.updatePassword(passwordEncoder.encode(reset_password.getNewPassword()));
-        memberRepository.save(member);
-    }
-
-    /**
-     * 아이디 중복 체크
-     * @param identity
-     * @return
-     */
-    @Override
-    public boolean checkIdentity(String identity){
-        return memberRepository.existsByIdentity(identity);
-    }
-
 
     /**
      * 회원 가입 서비스
@@ -103,7 +88,7 @@ public class MemberServiceImpl implements MemberService{
             throw new BadRequestException("중복");
         }
 
-        memberRepository.save(Member.builder()
+        memberDao.save(Member.builder()
                 .identity(create.getIdentity())
                 .password(create.getPassword())
                 .name(create.getName())
@@ -113,6 +98,20 @@ public class MemberServiceImpl implements MemberService{
                 .memberRole(create.getMemberRole())
                 .build());
     }
+
+//    //To do
+//    public MemberDto.READ getMember(){
+//        Member member = MemberThreadLocal.get();
+//    }
+//
+//    //To do
+//    public List<String> findIdentity(MemberDto.ID_READ read){
+//        return memberDao.findByNameAndBirth(read.getName(), read.getBirth())
+//    }
+//    //To do
+//    public Member getMember(String identity){
+//        return memberDao.findByIdentity(identity).orEleThrow() -> new NotFoundException("Member");
+//    }
 
     /**
      * 고객 정보 수정 서비스
@@ -124,7 +123,7 @@ public class MemberServiceImpl implements MemberService{
 
         Member member = MemberThreadLocal.get();
         member.updateMember(update);
-        memberRepository.save(member);
+        memberDao.save(member);
     }
 
     /**
@@ -145,7 +144,23 @@ public class MemberServiceImpl implements MemberService{
         }
 
         member.updatePassword(passwordEncoder.encode(update_password.getNewPassword()));
-        memberRepository.save(member);
+        memberDao.save(member);
+    }
+
+    /**
+     * 비밀번호 초기화 메소드
+     * @param reset_password
+     */
+    @Override
+    public void resetPassword(MemberDto.RESET_PASSWORD reset_password) {
+        if(!reset_password.getNewPassword().equals(reset_password.getReNewPassword())) {
+            throw new BadRequestException("변경하려는 비밀번호가 서로 일치하지 않습니다.");
+        }
+
+        Member member = memberDao.findByIdentity(reset_password.getIdentity())
+                .orElseThrow(() -> new NotFoundException("MemberEntity"));
+        member.updatePassword(passwordEncoder.encode(reset_password.getNewPassword()));
+        memberDao.save(member);
     }
 
     /**

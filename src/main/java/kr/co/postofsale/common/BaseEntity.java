@@ -6,5 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class BaseEntity {
-    protected Long code;
+
+    protected Long id;
 }

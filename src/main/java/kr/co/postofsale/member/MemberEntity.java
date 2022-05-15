@@ -1,15 +1,16 @@
 package kr.co.postofsale.member;
 
-import kr.co.postofsale.common.BaseEntity;
 import kr.co.postofsale.member.enumClass.Gender;
 import kr.co.postofsale.member.enumClass.MemberRole;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import nonapi.io.github.classgraph.json.Id;
 
 @Getter
 @NoArgsConstructor
-public class MemberEntity extends BaseEntity {
+public class MemberEntity{
+
 
     private String identity;
     private String password;
