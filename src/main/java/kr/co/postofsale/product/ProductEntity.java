@@ -1,13 +1,11 @@
 package kr.co.postofsale.product;
 
 import kr.co.postofsale.common.BaseEntity;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor

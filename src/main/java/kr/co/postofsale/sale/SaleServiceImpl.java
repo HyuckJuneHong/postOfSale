@@ -1,7 +1,7 @@
 package kr.co.postofsale.sale;
 
 import kr.co.postofsale.infrastructure.exception.BadRequestException;
-import kr.co.postofsale.product.ProductDao;
+import kr.co.postofsale.product.ProductRepositoryImpl;
 import kr.co.postofsale.product.ProductEntity;
 import kr.co.postofsale.record.RecordDao;
 import kr.co.postofsale.sale.saleDto.PaymentDto;
@@ -16,21 +16,21 @@ import java.util.List;
 
 public class SaleServiceImpl implements SaleService{
 
-    private SaleDao saleDao;
-    private ProductDao productDao;
+    private SaleRepositoryImpl saleRepositoryImpl;
+    private ProductRepositoryImpl productRepositoryImpl;
     private RecordDao recordDao;
 
 
     @Autowired
-    public SaleServiceImpl(SaleDao saleDao, ProductDao productDao, RecordDao recordDao) {
-        this.saleDao = saleDao;
-        this.productDao = productDao;
+    public SaleServiceImpl(SaleRepositoryImpl saleRepositoryImpl, ProductRepositoryImpl productRepositoryImpl, RecordDao recordDao) {
+        this.saleRepositoryImpl = saleRepositoryImpl;
+        this.productRepositoryImpl = productRepositoryImpl;
         this.recordDao = recordDao;
     }
 
     @Override
     public void addCart(SelectDto select) {
-        ProductEntity product =  productDao.findByProduct(select.getBuyCodeName());
+        ProductEntity product =  productRepositoryImpl.findByProduct(select.getBuyCodeName());
 
         System.out.println("\n<제품 선택 서비스>");
         if(product == null){
@@ -47,7 +47,7 @@ public class SaleServiceImpl implements SaleService{
                     .totalPrice(select.getBuyAmount() * product.getPrice())
                     .build();
 
-            saleDao.cart(sale);
+            saleRepositoryImpl.cart(sale);
             System.out.println("[장바구니에 제품: " + sale.getBuyProductName() + " (을/를) "
                     + sale.getBuyAmount() + "개 담았습니다.]");
 
@@ -55,10 +55,10 @@ public class SaleServiceImpl implements SaleService{
 
             long totalAmount = product.getTotalAmount() - select.getBuyAmount();
             if(totalAmount == 0){
-                productDao.deleteProduct(product);
+                productRepositoryImpl.deleteProduct(product);
             }else{
                 product.updateAmount(totalAmount);
-                productDao.updateProduct(product);
+                productRepositoryImpl.updateProduct(product);
             }
             System.out.println("[남은 재고량: " + totalAmount + "개]");
         }
@@ -77,8 +77,8 @@ public class SaleServiceImpl implements SaleService{
             FileWriter saleFw = new FileWriter(saleFile);
             BufferedWriter saleBw = new BufferedWriter(saleFw);
 
-            saleDao.shoppingEnd();
-            List<SaleEntity> list = saleDao.findByBuyList();
+            saleRepositoryImpl.shoppingEnd();
+            List<SaleEntity> list = saleRepositoryImpl.findByBuyList();
             Long totalPrice = 0L;
 
             System.out.println("\n<구매 목록>");

@@ -4,9 +4,14 @@ import kr.co.postofsale.infrastructure.exception.BadRequestException;
 import kr.co.postofsale.infrastructure.exception.NotFoundException;
 import kr.co.postofsale.infrastructure.interceptor.MemberThreadLocal;
 import kr.co.postofsale.infrastructure.security.jwt.JwtTokenProvider;
+import kr.co.postofsale.member.enumClass.MemberRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MemberServiceImpl implements MemberService{
@@ -64,17 +69,6 @@ public class MemberServiceImpl implements MemberService{
     }
 
     /**
-     * 비밀번호 초기화 확인 메서드
-     * @param reset
-     * @return
-     */
-    @Override
-    public boolean resetPasswordCheck(MemberDto.RESET_CHECK reset){
-        return memberRepositoryImpl.existsByIdentityAndNameAndBirth(reset.getIdentity()
-                , reset.getName(), reset.getBirth());
-    }
-
-    /**
      * 회원 가입 서비스
      * @param create
      * @return
@@ -97,19 +91,66 @@ public class MemberServiceImpl implements MemberService{
                 .build());
     }
 
-//    //To do
-//    public MemberDto.READ getMember(){
-//        Member member = MemberThreadLocal.get();
-//    }
-//
-//    //To do
-//    public List<String> findIdentity(MemberDto.ID_READ read){
-//        return memberDao.findByNameAndBirth(read.getName(), read.getBirth())
-//    }
-//    //To do
-//    public Member getMember(String identity){
-//        return memberDao.findByIdentity(identity).orEleThrow() -> new NotFoundException("Member");
-//    }
+    /**
+     * 자기 자신 정보 조회
+     * @return
+     */
+    public MemberDto.READ getMemberSelf(){
+        MemberEntity memberEntity = MemberThreadLocal.get();
+
+        MemberDto.READ member = MemberDto.READ.builder()
+                .identity(memberEntity.getIdentity())
+                .name(memberEntity.getName())
+                .birth(memberEntity.getBirth())
+                .gender(memberEntity.getGender())
+                .memberRole(memberEntity.getMemberRole())
+                .phone(memberEntity.getPhone())
+                .build();
+
+        return member;
+    }
+
+    /**
+     * 해당 아이디 회원 조회
+     * @param identity
+     * @return
+     */
+    @Override
+    public MemberDto.READ getMemberIdentity(String identity) {
+
+        MemberEntity memberEntity = MemberThreadLocal.get();
+
+        if(!memberEntity.getMemberRole().equals(MemberRole.ROLE_MANAGER)
+                || !memberEntity.getMemberRole().equals(MemberRole.ROLE_ADMIN)){
+            throw new BadRequestException("권한이 없습니다. (매니저 혹은 관리자만 가능)");
+        }
+
+        Optional<MemberEntity> member = memberRepositoryImpl.findByIdentity(identity);
+
+        if(member == null){
+            throw new BadRequestException("해당 이름을 가진 회원은 존재하지 않습니다.");
+        }
+
+        MemberDto.READ memberIdentity = MemberDto.READ.builder()
+                .identity(member.get().getIdentity())
+                .name(member.get().getName())
+                .birth(member.get().getBirth())
+                .gender(member.get().getGender())
+                .memberRole(member.get().getMemberRole())
+                .phone(member.get().getPhone())
+                .build();
+
+        return memberIdentity;
+    }
+
+    /**
+     * 모든 회원 조회
+     * @return
+     */
+    @Override
+    public List<MemberDto.READ> getMemberAll() {
+        return null;
+    }
 
     /**
      * 고객 정보 수정 서비스
@@ -145,21 +186,6 @@ public class MemberServiceImpl implements MemberService{
         memberRepositoryImpl.save(memberEntity);
     }
 
-    /**
-     * 비밀번호 초기화 메소드
-     * @param reset_password
-     */
-    @Override
-    public void resetPassword(MemberDto.RESET_PASSWORD reset_password) {
-        if(!reset_password.getNewPassword().equals(reset_password.getReNewPassword())) {
-            throw new BadRequestException("변경하려는 비밀번호가 서로 일치하지 않습니다.");
-        }
-
-        MemberEntity memberEntity = memberRepositoryImpl.findByIdentity(reset_password.getIdentity())
-                .orElseThrow(() -> new NotFoundException("MemberEntity"));
-        memberEntity.updatePassword(passwordEncoder.encode(reset_password.getNewPassword()));
-        memberRepositoryImpl.save(memberEntity);
-    }
 
     /**
      * 토큰 발급 서비스

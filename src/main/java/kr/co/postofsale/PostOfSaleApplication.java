@@ -10,7 +10,7 @@
 //import kr.co.postofsale.product.ProductServiceImpl;
 //import kr.co.postofsale.product.productDto.InsertDto;
 //import kr.co.postofsale.record.RecordDao;
-//import kr.co.postofsale.sale.SalePayment;
+//import kr.co.postofsale.sale.enumClass.SalePayment;
 //import kr.co.postofsale.sale.SaleServiceImpl;
 //import kr.co.postofsale.sale.saleDto.PaymentDto;
 //import kr.co.postofsale.sale.saleDto.SelectDto;

@@ -4,7 +4,7 @@ import kr.co.postofsale.product.ProductEntity;
 
 import java.util.*;
 
-public class SaleDao {
+public class SaleRepositoryImpl implements SaleRepository{
 
     private static long saleCode = 0;
 

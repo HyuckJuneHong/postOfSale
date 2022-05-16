@@ -1,4 +1,4 @@
-package kr.co.postofsale.sale;
+package kr.co.postofsale.sale.enumClass;
 
 import lombok.AllArgsConstructor;
 

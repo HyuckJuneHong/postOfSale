@@ -16,11 +16,6 @@ public class MemberRepositoryImpl implements MemberRepository{
     }
 
     @Override
-    public Optional<MemberEntity> findById(Long id) {
-        return Optional.ofNullable(map.get(id));
-    }
-
-    @Override
     public Optional<MemberEntity> findByIdentity(String identity) {
 
         return map.values().stream()
@@ -34,12 +29,14 @@ public class MemberRepositoryImpl implements MemberRepository{
      }
 
     @Override
-    public boolean existsByIdentityAndNameAndBirth(String identity, String name, String birth) {
-        return false;
-    }
-
-    @Override
     public boolean existsByIdentity(String identity) {
-        return false;
+        Optional<MemberEntity> member = map.values().stream()
+                .filter(memberEntity -> memberEntity.getIdentity().equals(identity))
+                .findAny();
+
+        if(member == null){
+            return false;
+        }
+        return true;
     }
 }

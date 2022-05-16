@@ -9,16 +9,16 @@ import java.util.ArrayList;
 
 public class ProductServiceImpl implements ProductService {
 
-    private ProductDao productDao;
+    private ProductRepositoryImpl productRepositoryImpl;
 
     @Autowired
-    public ProductServiceImpl(ProductDao productDao){
-        this.productDao = productDao;
+    public ProductServiceImpl(ProductRepositoryImpl productRepositoryImpl){
+        this.productRepositoryImpl = productRepositoryImpl;
     }
 
     @Override
     public void insertProduct(InsertDto insert) {
-        ProductEntity product = productDao.findByProduct(insert.getCodeName());
+        ProductEntity product = productRepositoryImpl.findByProduct(insert.getCodeName());
 
         System.out.println("\n<제품 입고 서비스>");
         if(product != null){
@@ -29,7 +29,7 @@ public class ProductServiceImpl implements ProductService {
                     .price(product.getPrice())
                     .totalAmount(product.getTotalAmount() + (insert.getAmount() * insert.getBox()))
                     .build();
-            productDao.updateProduct(addProduct);
+            productRepositoryImpl.updateProduct(addProduct);
         }else{
             ProductEntity newProduct = ProductEntity.builder()
                     .codeName(insert.getCodeName())
@@ -38,26 +38,26 @@ public class ProductServiceImpl implements ProductService {
                     .price(insert.getPrice())
                     .totalAmount(insert.getAmount()*insert.getBox())
                     .build();
-            productDao.addNewProduct(newProduct);
+            productRepositoryImpl.addNewProduct(newProduct);
         }
         System.out.println("[" + insert.getProductName() + " 입고 완료]");
     }
 
     @Override
     public void deleteProduct(String codeName) {
-        ProductEntity product = productDao.findByProduct(codeName);
+        ProductEntity product = productRepositoryImpl.findByProduct(codeName);
 
         System.out.println("\n<제품 삭제 서비스>");
         if(product == null){
             throw new BadRequestException("해당 상품은 이미 존재하지 않아 삭제에 실패하였습니다.");
         }
         System.out.println("[제품명: " + product.getProductName() + " 삭제 완료]");
-        productDao.deleteProduct(product);
+        productRepositoryImpl.deleteProduct(product);
     }
 
     @Override
     public void printProduct(String codeName) {
-        ProductEntity product = productDao.findByProduct(codeName);
+        ProductEntity product = productRepositoryImpl.findByProduct(codeName);
 
         System.out.println("\n<제품 조회 서비스>");
         if(product == null){
@@ -70,7 +70,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void printAllProduct() {
-        ArrayList<ProductEntity> list = new ArrayList<>(productDao.findAllProduct());
+        ArrayList<ProductEntity> list = new ArrayList<>(productRepositoryImpl.findAllProduct());
 
         System.out.println("\n<총 제품 조회 서비스>");
         System.out.println("---------------------------");

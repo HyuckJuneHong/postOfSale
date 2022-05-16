@@ -44,7 +44,8 @@ public class MemberEntity extends BaseEntity{
         this.password = password;
     }
 
-    //To do
     public void updateMember(MemberDto.UPDATE update) {
+        this.phone = update.getPhone();
+        this.name = update.getName();
     }
 }

@@ -1,6 +1,6 @@
 package kr.co.postofsale.sale.saleDto;
 
-import kr.co.postofsale.sale.SalePayment;
+import kr.co.postofsale.sale.enumClass.SalePayment;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

@@ -4,14 +4,14 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ProductDao {
+public class ProductRepositoryImpl {
 
     private static long productCode = 0;
 
     private Map<String, ProductEntity> map = new HashMap<>();
 
     public void addNewProduct(ProductEntity product){
-        product.setCode(productCode++);
+        product.setId(productCode++);
         map.put(product.getCodeName(), product);
     }
 

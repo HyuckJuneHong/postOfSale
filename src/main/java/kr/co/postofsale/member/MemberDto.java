@@ -1,5 +1,6 @@
 package kr.co.postofsale.member;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 
 import kr.co.postofsale.member.enumClass.Gender;
@@ -87,9 +88,11 @@ public class MemberDto {
         @ApiModelProperty(example = "MALE or FEMALE")
         private Gender gender;
         @ApiModelProperty(example = "19980122")
-        private String birthDay;
+        private String birth;
         @ApiModelProperty(example = "010-xxxx-xxxx")
         private String phone;
+        @ApiModelProperty(example = "해당 권한")
+        private MemberRole memberRole;
     }
 
     @Getter
