@@ -52,7 +52,7 @@ public class MemberServiceImpl implements MemberService{
      * @return
      */
     @Override
-    public boolean checkIdentity(String identity){
+    public Boolean checkIdentity(String identity){
         return memberRepositoryImpl.existsByIdentity(identity);
     }
 
@@ -63,7 +63,7 @@ public class MemberServiceImpl implements MemberService{
      * @return
      */
     @Override
-    public boolean reCheckPassword(String password){
+    public Boolean reCheckPassword(String password){
         //boolean matches(rP, eP) : 저장소에서 얻은 인코딩된 암호도 인코딩된 원시 암호화 일치하는지 확인하는 메소드 (절대 디코딩되지 않음)
         return passwordEncoder.matches(password, MemberThreadLocal.get().getPassword());
     }

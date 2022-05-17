@@ -51,7 +51,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .and()
                 .authorizeRequests()
-                .antMatchers("onlineworkout/**").permitAll()
+                .antMatchers("pos/**").permitAll()
                 .antMatchers("/*/login", "/*/signUp").permitAll()
 
                 .and() //지정된 필터 앞에 커스텀 필터를 추가

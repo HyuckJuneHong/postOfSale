@@ -6,8 +6,8 @@ public interface MemberService {
 
     //common service
     MemberDto.TOKEN login(MemberDto.LOGIN login);                   //로그인
-    boolean checkIdentity(String identity);                         //Id 중복 체크
-    boolean reCheckPassword(String password);                       //비밀번호 재확인
+    Boolean checkIdentity(String identity);                         //Id 중복 체크
+    Boolean reCheckPassword(String password);                       //비밀번호 재확인
 
     //create service
     void signUp(MemberDto.CREATE create);                           //회원 가입

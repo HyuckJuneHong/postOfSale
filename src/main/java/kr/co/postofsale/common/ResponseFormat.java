@@ -1,13 +1,13 @@
 package kr.co.postofsale.common;
 
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
 @Getter
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
+@Setter
 public class ResponseFormat<T> {
 
     @ApiModelProperty(example = "성공은 1 or 실패는 2 or 토큰 만료는 3")

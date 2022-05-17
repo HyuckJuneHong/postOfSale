@@ -1,9 +1,7 @@
 package kr.co.postofsale.product;
 
 import kr.co.postofsale.common.BaseEntity;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 
