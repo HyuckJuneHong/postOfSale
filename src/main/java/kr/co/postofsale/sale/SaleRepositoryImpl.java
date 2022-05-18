@@ -23,4 +23,5 @@ public class SaleRepositoryImpl implements SaleRepository{
         return map.get(saleCode - 1);
     }
 
+
 }

@@ -9,6 +9,8 @@ import kr.co.postofsale.infrastructure.security.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/pos/member")
 @RequiredArgsConstructor
@@ -25,7 +27,7 @@ public class MemberController {
     }
 
     @ApiOperation("비밀번호 재확인")
-    @PostMapping("/reCheck/password")
+    @PostMapping("/password/check")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Authorization", value = "사용자 인증을 위한 accessToken", paramType = "header", required = true)
     })
@@ -34,7 +36,7 @@ public class MemberController {
     }
 
     @ApiOperation("아이디 중복 확인")
-    @PostMapping("/check/identity")
+    @PostMapping("/idneity/check")
     public ResponseFormat<Boolean> checkIdentity(@RequestBody String identity) {
         return ResponseFormat.ok(memberService.checkIdentity(identity));
     }
@@ -55,9 +57,17 @@ public class MemberController {
         return ResponseFormat.ok(memberService.getMemberSelf());
     }
 
-    //To do ... 아이디로 회원 정보 조회
+    @ApiOperation("해당 아이디 회원 정보 조회")
+    @GetMapping("/read")
+    public ResponseFormat<MemberDto.READ> getMemberIdentity(@RequestBody String identity){
+        return ResponseFormat.ok(memberService.getMemberIdentity(identity));
+    }
 
-    //To do ... 모든 회원 정보 조회
+    @ApiOperation("모든 회원 정보 조회")
+    @GetMapping("/readAll")
+    public ResponseFormat<List<MemberDto.READ>> getMemberAll(){
+        return ResponseFormat.ok(memberService.getMemberAll());
+    }
 
     @ApiOperation("회원 정보 수정")
     @PutMapping
@@ -76,6 +86,14 @@ public class MemberController {
     })
     public ResponseFormat updatePassword(@RequestBody MemberDto.UPDATE_PASSWORD update) {
         memberService.updatePassword(update);
+        return ResponseFormat.ok();
+    }
+
+    //권한 변경
+    @ApiModelProperty("권한 변경")
+    @PutMapping("/role")
+    public ResponseFormat updateRole(@RequestBody MemberDto.UPDATE_ROLE update){
+        memberService.updateMemberRoLe(update);
         return ResponseFormat.ok();
     }
 

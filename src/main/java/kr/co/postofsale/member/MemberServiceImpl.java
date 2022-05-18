@@ -128,7 +128,7 @@ public class MemberServiceImpl implements MemberService{
         Optional<MemberEntity> member = memberRepositoryImpl.findByIdentity(identity);
 
         if(member == null){
-            throw new BadRequestException("해당 이름을 가진 회원은 존재하지 않습니다.");
+            throw new BadRequestException("해당 아이디를 가진 회원은 존재하지 않습니다.");
         }
 
         MemberDto.READ memberIdentity = MemberDto.READ.builder()
@@ -149,7 +149,29 @@ public class MemberServiceImpl implements MemberService{
      */
     @Override
     public List<MemberDto.READ> getMemberAll() {
-        return null;
+        List<MemberEntity> memberList = memberRepositoryImpl.findAll();
+
+        MemberEntity memberEntity = MemberThreadLocal.get();
+
+        if(!memberEntity.getMemberRole().equals(MemberRole.ROLE_MANAGER)
+                || !memberEntity.getMemberRole().equals(MemberRole.ROLE_ADMIN)){
+            throw new BadRequestException("권한이 없습니다. (매니저 혹은 관리자만 가능)");
+        }
+
+        List<MemberDto.READ> memberReadList = new ArrayList<>();
+        for(MemberEntity list : memberList){
+            MemberDto.READ member = MemberDto.READ.builder()
+                    .identity(list.getIdentity())
+                    .name(list.getName())
+                    .birth(list.getBirth())
+                    .gender(list.getGender())
+                    .memberRole(list.getMemberRole())
+                    .phone(list.getPhone())
+                    .build();
+            memberReadList.add(member);
+        }
+
+        return memberReadList;
     }
 
     /**
@@ -162,7 +184,7 @@ public class MemberServiceImpl implements MemberService{
 
         MemberEntity memberEntity = MemberThreadLocal.get();
         memberEntity.updateMember(update);
-        memberRepositoryImpl.save(memberEntity);
+        memberRepositoryImpl.updateSave(memberEntity);
     }
 
     /**
@@ -183,7 +205,38 @@ public class MemberServiceImpl implements MemberService{
         }
 
         memberEntity.updatePassword(passwordEncoder.encode(update_password.getNewPassword()));
-        memberRepositoryImpl.save(memberEntity);
+        memberRepositoryImpl.updateSave(memberEntity);
+    }
+
+    /**
+     * 회원 권한 정보 변경
+     * @param update_role
+     */
+    @Override
+    public void updateMemberRoLe(MemberDto.UPDATE_ROLE update_role) {
+
+        MemberEntity memberEntity = MemberThreadLocal.get();
+
+        if(!memberEntity.getMemberRole().equals(MemberRole.ROLE_ADMIN)){
+            throw new BadRequestException("관리자만 권한을 변경할 수 있습니다.");
+        }
+
+        Optional<MemberEntity> member = memberRepositoryImpl.findByIdentity(update_role.getIdentity());
+
+        if(member == null){
+            throw new BadRequestException("해당 아이디를 가진 회원은 존재하지 않습니다.");
+        }
+
+        MemberEntity memberEntity1 = member.get();
+        if(update_role.getMemberRole().equals(MemberRole.ROLE_MEMBER)){
+            memberEntity1.updateRole(MemberRole.ROLE_MEMBER);
+        }else if(update_role.getMemberRole().equals(MemberRole.ROLE_MANAGER)){
+            memberEntity1.updateRole(MemberRole.ROLE_MANAGER);
+        }else{
+            throw new BadRequestException("없는 권한입니다.");
+        }
+
+        memberRepositoryImpl.updateSave(memberEntity1);
     }
 
 

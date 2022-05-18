@@ -6,6 +6,7 @@ import java.util.Optional;
 public interface MemberRepository {
 
     MemberEntity save(MemberEntity memberEntity);
+    MemberEntity updateSave(MemberEntity memberEntity);
 
     Optional<MemberEntity> findByIdentity(String identity);
     List<MemberEntity> findAll();

@@ -18,7 +18,8 @@ public interface MemberService {
     List<MemberDto.READ> getMemberAll();                            //모든 회원 정보 조회
 
     //update service
-    void updateMember(MemberDto.UPDATE update);                     //회원 정보
+    void updateMember(MemberDto.UPDATE update);                     //자신의 회원 정보 변경
     void updatePassword(MemberDto.UPDATE_PASSWORD update_password); //비밀번호 변경
+    void updateMemberRoLe(MemberDto.UPDATE_ROLE update_role);       //권한 변경
 
 }

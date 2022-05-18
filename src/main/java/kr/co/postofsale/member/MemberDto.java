@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.pl.NIP;
 
 import javax.validation.constraints.NotBlank;
 
@@ -126,6 +127,21 @@ public class MemberDto {
         @ApiModelProperty(example = "새 비밀번호 확인")
         @NotBlank(message = "확인 비밀번호를 입력해주세요.")
         private String reNewPassword;
+    }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class UPDATE_ROLE{
+
+        @ApiModelProperty(example = "변경할 회원 아이디")
+        @NotBlank(message = "권한을 변경할 아이디를 입력해주세요.")
+        private String identity;
+
+        @ApiModelProperty(example = "변경할 권한: ROLE_MEMBER or ROLE_MANAGER")
+        @NotBlank(message = "새로 부여할 권한을 입력하세요. ROLE_MEMBER or ROLE_MANAGER")
+        private MemberRole memberRole;
     }
 
     @AllArgsConstructor

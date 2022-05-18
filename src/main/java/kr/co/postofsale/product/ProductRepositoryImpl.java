@@ -1,33 +1,35 @@
 package kr.co.postofsale.product;
 
+import kr.co.postofsale.member.MemberEntity;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ProductRepositoryImpl {
 
-    private static long productCode = 0;
 
-    private Map<String, ProductEntity> map = new HashMap<>();
+    private static Map<Long, ProductEntity> mapProduct = new HashMap<>();
+    private static Long sequenceP = 0L;
 
     public void addNewProduct(ProductEntity product){
-        product.setId(productCode++);
-        map.put(product.getCodeName(), product);
+        product.setId(sequenceP++);
+        mapProduct.put(product.getId(), product);
     }
 
     public void updateProduct(ProductEntity product){
-        map.put(product.getCodeName(), product);
+        mapProduct.put(product.getId(), product);
     }
 
     public void deleteProduct(ProductEntity product){
-        map.remove(product.getCodeName());
+        mapProduct.remove(product.getId());
     }
 
-    public ProductEntity findByProduct(String codeName){
-        return map.get(codeName);
-    }
+//    public ProductEntity findByProduct(Long id){
+//        return mapProduct.get(id);
+//    }
 
-    public Collection<ProductEntity> findAllProduct(){
-        return map.values();
-    }
+//    public Collection<ProductEntity> findAllProduct(){
+//        return mapProduct.values();
+//    }
 }
