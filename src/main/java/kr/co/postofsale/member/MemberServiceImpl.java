@@ -5,11 +5,16 @@ import kr.co.postofsale.infrastructure.exception.NotFoundException;
 import kr.co.postofsale.infrastructure.interceptor.MemberThreadLocal;
 import kr.co.postofsale.infrastructure.security.jwt.JwtTokenProvider;
 import kr.co.postofsale.member.enumClass.MemberRole;
+import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,13 +63,9 @@ public class MemberServiceImpl implements MemberService{
     @Override
     public Boolean checkIdentity(String identity){
 
-        MemberEntity member = memberRepositoryImpl.findByIdentity(identity).get();
+        Boolean exist = memberRepositoryImpl.existByIdentity(identity);
 
-        if(member == null){
-            return false;
-        }else{
-            return true;
-        }
+        return exist;
     }
 
 
@@ -85,21 +86,14 @@ public class MemberServiceImpl implements MemberService{
      * @return
      */
     @Override
+    @Transactional
     public void signUp(MemberDto.CREATE create){
 
-//        if(checkIdentity(create.getIdentity())){
-//            throw new BadRequestException("중복");
-//        }
-
-        if(memberRepositoryImpl.findByIdentity(create.getIdentity()).isPresent()){
-            throw new BadRequestException("아이디 중복");
+        if(checkIdentity(create.getIdentity())){
+            throw new BadRequestException("중복");
         }
 
-//        if(memberEntity != null){
-//        }
-
-
-        memberRepositoryImpl.save(MemberEntity.builder()
+        MemberEntity memberEntity = MemberEntity.builder()
                 .identity(create.getIdentity())
                 .password(create.getPassword())
                 .name(create.getName())
@@ -107,7 +101,11 @@ public class MemberServiceImpl implements MemberService{
                 .birth(create.getBirth())
                 .phone(create.getPhone())
                 .memberRole(create.getMemberRole())
-                .build());
+                .build();
+
+        memberEntity.setInsertDate(new Timestamp(System.currentTimeMillis()));
+
+        memberRepositoryImpl.save(memberEntity);
     }
 
     /**
@@ -146,7 +144,7 @@ public class MemberServiceImpl implements MemberService{
 
         Optional<MemberEntity> member = memberRepositoryImpl.findByIdentity(identity);
 
-        if(member == null){
+        if(!member.isPresent()){
             throw new BadRequestException("해당 아이디를 가진 회원은 존재하지 않습니다.");
         }
 
@@ -199,11 +197,12 @@ public class MemberServiceImpl implements MemberService{
      * @return
      */
     @Override
+    @Transactional
     public void updateMember(MemberDto.UPDATE update){
 
         MemberEntity memberEntity = MemberThreadLocal.get();
         memberEntity.updateMember(update);
-        memberRepositoryImpl.updateSave(memberEntity);
+        memberRepositoryImpl.save(memberEntity);
     }
 
     /**
@@ -212,6 +211,7 @@ public class MemberServiceImpl implements MemberService{
      * @return
      */
     @Override
+    @Transactional
     public void updatePassword(MemberDto.UPDATE_PASSWORD update_password) {
 
         MemberEntity memberEntity = MemberThreadLocal.get();
@@ -224,7 +224,7 @@ public class MemberServiceImpl implements MemberService{
         }
 
         memberEntity.updatePassword(passwordEncoder.encode(update_password.getNewPassword()));
-        memberRepositoryImpl.updateSave(memberEntity);
+        memberRepositoryImpl.save(memberEntity);
     }
 
     /**
@@ -232,6 +232,7 @@ public class MemberServiceImpl implements MemberService{
      * @param update_role
      */
     @Override
+    @Transactional
     public void updateMemberRoLe(MemberDto.UPDATE_ROLE update_role) {
 
         MemberEntity memberEntity = MemberThreadLocal.get();
@@ -242,7 +243,7 @@ public class MemberServiceImpl implements MemberService{
 
         Optional<MemberEntity> member = memberRepositoryImpl.findByIdentity(update_role.getIdentity());
 
-        if(member == null){
+        if(!member.isPresent()){
             throw new BadRequestException("해당 아이디를 가진 회원은 존재하지 않습니다.");
         }
 
@@ -255,7 +256,7 @@ public class MemberServiceImpl implements MemberService{
             throw new BadRequestException("없는 권한입니다.");
         }
 
-        memberRepositoryImpl.updateSave(memberEntity1);
+        memberRepositoryImpl.save(memberEntity1);
     }
 
 

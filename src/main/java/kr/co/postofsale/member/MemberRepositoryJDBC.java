@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.security.core.parameters.P;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
@@ -25,29 +26,20 @@ public class MemberRepositoryJDBC implements MemberRepository {
 
     private RowMapper<MemberEntity> memberEntityRowMapper(){
         return (rs, rowNum) -> {
-            MemberEntity memberEntity = new MemberEntity();
-
-//                    MemberEntity.builder()
-//                    .identity(rs.getString("identity"))
-//                    .password(rs.getString("password"))
-//                    .name(rs.getString("name"))
-//                    .birth(rs.getString("birth"))
-//                    .phone(rs.getString("phone"))
-//                    .gender(Gender.values()[rs.getInt("gender")])
-//                    .memberRole(MemberRole.values()[rs.getInt("memberRole")])
-//                    .build();
+            MemberEntity memberEntity = MemberEntity.builder()
+                    .identity(rs.getString("identity"))
+                    .password(rs.getString("password"))
+                    .name(rs.getString("name"))
+                    .birth(rs.getString("birth"))
+                    .phone(rs.getString("phone"))
+                    .gender(Gender.valueOf(rs.getString("gender")))
+                    .memberRole(MemberRole.valueOf(rs.getString("member_role")))
+                    .build();
 
             memberEntity.setId(rs.getLong("id"));
-            memberEntity.setInsertDate(rs.getTimestamp("insertDate"));
-            memberEntity.setDeleteDate(rs.getTimestamp("deleteDate"));
-            memberEntity.setUpdateDate(rs.getTimestamp("updateDate"));
-            memberEntity.setIdentity(rs.getString("identity"));
-            memberEntity.setPassword(rs.getString("password"));
-            memberEntity.setName(rs.getString("name"));
-            memberEntity.setBirth(rs.getString("birth"));
-            memberEntity.setPhone(rs.getString("phone"));
-            memberEntity.setGender(Gender.values()[rs.getInt("gender")]);
-            memberEntity.setMemberRole(MemberRole.values()[rs.getInt("memberRole")]);
+            memberEntity.setInsertDate(rs.getTimestamp("insert_date"));
+            memberEntity.setDeleteDate(rs.getTimestamp("delete_date"));
+            memberEntity.setUpdateDate(rs.getTimestamp("update_date"));
 
             return memberEntity;
         };
@@ -69,9 +61,9 @@ public class MemberRepositoryJDBC implements MemberRepository {
         parameters.put("phone", memberEntity.getPhone());
         parameters.put("gender", memberEntity.getGender());
         parameters.put("member_role", memberEntity.getMemberRole());
-        parameters.put("insertDate", memberEntity.getInsertDate());
-        parameters.put("updateDate", memberEntity.getUpdateDate());
-        parameters.put("deleteDate", memberEntity.getDeleteDate());
+        parameters.put("insert_date", memberEntity.getInsertDate());
+        parameters.put("update_date", memberEntity.getUpdateDate());
+        parameters.put("delete_date", memberEntity.getDeleteDate());
 
         Number key = simpleJdbcInsert.executeAndReturnKey(parameters);
         memberEntity.setId(key.longValue());
@@ -79,21 +71,26 @@ public class MemberRepositoryJDBC implements MemberRepository {
     }
 
     @Override
-    @Transactional
-    public MemberEntity updateSave(MemberEntity memberEntity) {
-        return null;
-    }
-
-    @Override
     public Optional<MemberEntity> findByIdentity(String identity) {
         List<MemberEntity> list = jdbcTemplate.query("select * from member where identity = ?"
                 , memberEntityRowMapper(), identity);
-        return list.stream().findAny();
+        return list.isEmpty() ? null : list.stream().findAny();
     }
 
     @Override
     public List<MemberEntity> findAll() {
         return jdbcTemplate.query("select * from member", memberEntityRowMapper());
+    }
+
+    @Override
+    public Boolean existByIdentity(String identity) {
+
+        List<MemberEntity> list = jdbcTemplate.query("select * from member where identity = ?"
+                , memberEntityRowMapper(), identity);
+
+        return list.isEmpty() ? false : true;
+
+
     }
 
 }
