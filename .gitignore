@@ -1,7 +1,6 @@
 HELP.md
 !**/src/main/**/target/
 !**/src/test/**/target/
-!**/src/main/**/application.yml/
 
 ### STS ###
 .apt_generated
@@ -17,6 +16,7 @@ HELP.md
 *.iws
 *.iml
 *.ipr
+application.yml
 
 ### NetBeans ###
 /nbproject/private/
