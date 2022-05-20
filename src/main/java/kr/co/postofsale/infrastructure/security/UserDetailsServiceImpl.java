@@ -1,7 +1,8 @@
 package kr.co.postofsale.infrastructure.security;
 
 
-import kr.co.postofsale.member.MemberRepositoryImpl;
+import kr.co.postofsale.member.MemberRepository;
+import kr.co.postofsale.member.MemberRepositoryJDBC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -13,8 +14,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
+    private final MemberRepository memberRepository;
+
     @Autowired
-    private MemberRepositoryImpl memberRepositoryImpl;
+    public UserDetailsServiceImpl(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
+    }
 
     //인증의 주체에 대한 정보를 가져오는 메소드
     @Override

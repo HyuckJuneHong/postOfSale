@@ -1,15 +1,12 @@
 package kr.co.postofsale.member;
 
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
-
 import kr.co.postofsale.member.enumClass.Gender;
 import kr.co.postofsale.member.enumClass.MemberRole;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.pl.NIP;
 
 import javax.validation.constraints.NotBlank;
 
@@ -146,7 +143,6 @@ public class MemberDto {
 
     @AllArgsConstructor
     @NoArgsConstructor
-    @Builder
     @Getter
     public class RESET_CHECK {
 

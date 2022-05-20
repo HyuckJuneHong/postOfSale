@@ -16,12 +16,16 @@ import java.util.Optional;
 @Service
 public class MemberServiceImpl implements MemberService{
 
-    @Autowired
-    private MemberRepositoryImpl memberRepositoryImpl;
+    private final MemberRepository memberRepositoryImpl;
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    public MemberServiceImpl(MemberRepository memberRepository) {
+        memberRepositoryImpl = memberRepository;
+    }
 
     /**
      * 로그인 서비스
@@ -53,7 +57,14 @@ public class MemberServiceImpl implements MemberService{
      */
     @Override
     public Boolean checkIdentity(String identity){
-        return memberRepositoryImpl.existsByIdentity(identity);
+
+        MemberEntity member = memberRepositoryImpl.findByIdentity(identity).get();
+
+        if(member == null){
+            return false;
+        }else{
+            return true;
+        }
     }
 
 
@@ -76,9 +87,17 @@ public class MemberServiceImpl implements MemberService{
     @Override
     public void signUp(MemberDto.CREATE create){
 
-        if(checkIdentity(create.getIdentity())){
-            throw new BadRequestException("중복");
+//        if(checkIdentity(create.getIdentity())){
+//            throw new BadRequestException("중복");
+//        }
+
+        if(memberRepositoryImpl.findByIdentity(create.getIdentity()).isPresent()){
+            throw new BadRequestException("아이디 중복");
         }
+
+//        if(memberEntity != null){
+//        }
+
 
         memberRepositoryImpl.save(MemberEntity.builder()
                 .identity(create.getIdentity())

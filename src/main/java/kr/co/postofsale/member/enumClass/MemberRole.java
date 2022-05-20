@@ -1,9 +1,11 @@
 package kr.co.postofsale.member.enumClass;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 import java.util.Arrays;
 
+@Getter
 @AllArgsConstructor
 public enum MemberRole {
 

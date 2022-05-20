@@ -3,7 +3,8 @@ package kr.co.postofsale.infrastructure.security.jwt;
 import io.jsonwebtoken.*;
 import kr.co.postofsale.infrastructure.exception.*;
 import kr.co.postofsale.member.MemberEntity;
-import kr.co.postofsale.member.MemberRepositoryImpl;
+import kr.co.postofsale.member.MemberRepository;
+import kr.co.postofsale.member.MemberRepositoryJDBC;
 import kr.co.postofsale.member.enumClass.MemberRole;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.util.*;
+
 @Slf4j
 @Component
 public class JwtTokenProvider {
@@ -34,8 +36,12 @@ public class JwtTokenProvider {
     private final long ACCESS_EXPIRE = 1000 * 60 * 30; //엑세스 만료 (30분)
     private final long REFRESH_EXPIRE = 1000 * 60 * 60 * 24 * 14; //새로고침 만료 (2주)
 
+    private final MemberRepository memberRepository;
+
     @Autowired
-    private MemberRepositoryImpl memberRepositoryImpl;
+    public JwtTokenProvider(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
+    }
 
     /** init(), @PostConstruct
      * init() : 객체 초기화, secretKey를 Base64로 인코딩.
@@ -216,7 +222,7 @@ public class JwtTokenProvider {
      * @Exception UserNotFoundException : 해당 회원을 찾을 수 없는 경우 발생하는 예외
      */
     public MemberEntity findMemberByToken(String token){
-        return memberRepositoryImpl.findByIdentity(findIdentityByToken(token)) //해당 아이디를 가지는 member를 찾아 토큰을 반환
+        return memberRepository.findByIdentity(findIdentityByToken(token)) //해당 아이디를 가지는 member를 찾아 토큰을 반환
                 .orElseThrow(() -> new NotFoundException("MemberEntity")); //없으면 Exception
     }
 

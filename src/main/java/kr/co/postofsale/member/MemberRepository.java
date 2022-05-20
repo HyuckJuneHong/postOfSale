@@ -11,5 +11,4 @@ public interface MemberRepository {
     Optional<MemberEntity> findByIdentity(String identity);
     List<MemberEntity> findAll();
 
-    boolean existsByIdentity(String identity);
 }

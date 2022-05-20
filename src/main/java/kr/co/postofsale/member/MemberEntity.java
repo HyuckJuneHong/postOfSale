@@ -6,8 +6,10 @@ import kr.co.postofsale.member.enumClass.MemberRole;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
 @NoArgsConstructor
 public class MemberEntity extends BaseEntity{
 

@@ -6,19 +6,19 @@ import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import kr.co.postofsale.common.ResponseFormat;
 import kr.co.postofsale.infrastructure.security.jwt.JwtTokenProvider;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/pos/member")
-@RequiredArgsConstructor
 public class MemberController {
 
-    private final MemberRepositoryImpl memberRepository;
-    private final MemberServiceImpl memberService;
-    private final JwtTokenProvider jwtTokenProvider;
+    @Autowired
+    private MemberServiceImpl memberService;
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
 
     @ApiModelProperty("로그인")
     @PostMapping("/login")
@@ -42,7 +42,7 @@ public class MemberController {
     }
 
     @ApiOperation("회원가입")
-    @PostMapping
+    @PostMapping("/signUp")
     public ResponseFormat signUp(@RequestBody MemberDto.CREATE create) {
         memberService.signUp(create);
         return ResponseFormat.ok();
@@ -89,7 +89,6 @@ public class MemberController {
         return ResponseFormat.ok();
     }
 
-    //권한 변경
     @ApiModelProperty("권한 변경")
     @PutMapping("/role")
     public ResponseFormat updateRole(@RequestBody MemberDto.UPDATE_ROLE update){
