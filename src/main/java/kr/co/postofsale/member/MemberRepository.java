@@ -7,9 +7,14 @@ public interface MemberRepository {
 
     MemberEntity save(MemberEntity memberEntity);
 
+    void update(MemberEntity memberEntity);
+    void deleteByidentity(MemberEntity memberEntity);
+    void deleteAll();
+
     Optional<MemberEntity> findByIdentity(String identity);
     List<MemberEntity> findAll();
 
     Boolean existByIdentity(String identity);
+    Boolean existByPhone(String phone);
 
 }

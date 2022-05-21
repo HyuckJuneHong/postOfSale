@@ -15,7 +15,7 @@ public class AuthInterceptor implements HandlerInterceptor {
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
-    //컨트롤러 호출 전 실행되는 메소드로 true 반환 시 메소드 살행 후 핸들러에 접근을 하고 false 반환 작업을 중단해 컨트롤러 및 핸들러 실행이 중단된다.
+    //컨트롤러 호출 전 실행되는 메소드로 true 반환 시 메소드 실행 후 핸들러에 접근을 하고 false 반환 작업을 중단해 컨트롤러 및 핸들러 실행이 중단된다.
     @Override
     public boolean preHandle(HttpServletRequest request
             , @NotNull HttpServletResponse response, @NotNull Object object){

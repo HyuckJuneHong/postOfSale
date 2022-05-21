@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.sql.Timestamp;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -20,6 +22,7 @@ public class MemberEntity extends BaseEntity{
     private String birth;
     private Gender gender;
     private MemberRole memberRole;
+    private String accessToken;
     private String refreshToken;
 
     @Builder
@@ -36,18 +39,24 @@ public class MemberEntity extends BaseEntity{
 
     public void updateRole(MemberRole role){
         this.memberRole = role;
+        this.updateDate = new Timestamp(System.currentTimeMillis());
     }
 
+    public void updateAccessToken(String accessToken){
+        this.accessToken = accessToken;
+    }
     public void updateRefreshToken(String refreshToken){
         this.refreshToken = refreshToken;
     }
 
     public void updatePassword(String password){
         this.password = password;
+        this.updateDate = new Timestamp(System.currentTimeMillis());
     }
 
     public void updateMember(MemberDto.UPDATE update) {
         this.phone = update.getPhone();
         this.name = update.getName();
+        this.updateDate = new Timestamp(System.currentTimeMillis());
     }
 }

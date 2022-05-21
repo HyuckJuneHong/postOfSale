@@ -14,12 +14,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    private final MemberRepository memberRepository;
-
-    @Autowired
-    public UserDetailsServiceImpl(MemberRepository memberRepository) {
-        this.memberRepository = memberRepository;
-    }
+//    private final MemberRepository memberRepository;
+//
+//    @Autowired
+//    public UserDetailsServiceImpl(MemberRepository memberRepository) {
+//        this.memberRepository = memberRepository;
+//    }
 
     //인증의 주체에 대한 정보를 가져오는 메소드
     @Override

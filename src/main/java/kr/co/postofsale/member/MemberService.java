@@ -22,4 +22,8 @@ public interface MemberService {
     void updatePassword(MemberDto.UPDATE_PASSWORD update_password); //비밀번호 변경
     void updateMemberRoLe(MemberDto.UPDATE_ROLE update_role);       //권한 변경
 
+    //delete service
+    void deleteMember(MemberDto.DELETE delete);                     //회원 탈퇴
+    void deleteAll();
+
 }

@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.security.core.parameters.P;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.sql.DataSource;
 import java.util.HashMap;
@@ -15,6 +17,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+
+@Repository
 public class MemberRepositoryJDBC implements MemberRepository {
 
     private final JdbcTemplate jdbcTemplate;
@@ -32,8 +36,8 @@ public class MemberRepositoryJDBC implements MemberRepository {
                     .name(rs.getString("name"))
                     .birth(rs.getString("birth"))
                     .phone(rs.getString("phone"))
-                    .gender(Gender.valueOf(rs.getString("gender")))
-                    .memberRole(MemberRole.valueOf(rs.getString("member_role")))
+                    .gender(Gender.of(rs.getString("gender")))
+                    .memberRole(MemberRole.of(rs.getString("member_role")))
                     .build();
 
             memberEntity.setId(rs.getLong("id"));
@@ -71,6 +75,26 @@ public class MemberRepositoryJDBC implements MemberRepository {
     }
 
     @Override
+    public void update(MemberEntity memberEntity) {
+        this.jdbcTemplate.update("update member " +
+                        "set password=?, name=?, phone=?, member_role=?, update_date=?" +
+                        "where identity=?"
+                , new Object[] { memberEntity.getPassword(), memberEntity.getName(), memberEntity.getPhone()
+                        , memberEntity.getMemberRole(), memberEntity.getUpdateDate()
+                        , memberEntity.getIdentity()});
+    }
+
+    @Override
+    public void deleteByidentity(MemberEntity memberEntity) {
+        this.jdbcTemplate.update("DELETE FROM member WHERE identity=?", memberEntity.getIdentity());
+    }
+
+    @Override
+    public void deleteAll() {
+        this.jdbcTemplate.update("DELETE from member");
+    }
+
+    @Override
     public Optional<MemberEntity> findByIdentity(String identity) {
         List<MemberEntity> list = jdbcTemplate.query("select * from member where identity = ?"
                 , memberEntityRowMapper(), identity);
@@ -89,7 +113,15 @@ public class MemberRepositoryJDBC implements MemberRepository {
                 , memberEntityRowMapper(), identity);
 
         return list.isEmpty() ? false : true;
+    }
 
+    @Override
+    public Boolean existByPhone(String phone) {
+
+        List<MemberEntity> list = jdbcTemplate.query("select * from member where phone = ?"
+                , memberEntityRowMapper(), phone);
+
+        return list.isEmpty() ? false : true;
 
     }
 

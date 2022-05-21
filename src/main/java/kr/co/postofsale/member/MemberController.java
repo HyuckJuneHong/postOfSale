@@ -37,7 +37,7 @@ public class MemberController {
 
     @ApiOperation("아이디 중복 확인")
     @PostMapping("/idneity/check")
-    public ResponseFormat<Void> checkIdentity(@RequestBody String identity) {
+    public ResponseFormat<Boolean> checkIdentity(@RequestBody String identity) {
         return ResponseFormat.ok(memberService.checkIdentity(identity));
     }
 
@@ -45,6 +45,13 @@ public class MemberController {
     @PostMapping("/signUp")
     public ResponseFormat signUp(@RequestBody MemberDto.CREATE create) {
         memberService.signUp(create);
+        return ResponseFormat.ok();
+    }
+
+    @ApiOperation("회원 탈퇴")
+    @PostMapping("/delete")
+    public ResponseFormat delete(@RequestBody MemberDto.DELETE delete){
+        memberService.deleteMember(delete);
         return ResponseFormat.ok();
     }
 
@@ -74,7 +81,7 @@ public class MemberController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Authorization", value = "사용자 인증을 위한 accessToken", paramType = "header", required = true)
     })
-    public ResponseFormat updateUser(@RequestBody MemberDto.UPDATE update) {
+    public ResponseFormat updateMember(@RequestBody MemberDto.UPDATE update) {
         memberService.updateMember(update);
         return ResponseFormat.ok();
     }

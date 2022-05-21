@@ -4,17 +4,15 @@ import kr.co.postofsale.infrastructure.exception.BadRequestException;
 import kr.co.postofsale.infrastructure.exception.NotFoundException;
 import kr.co.postofsale.infrastructure.interceptor.MemberThreadLocal;
 import kr.co.postofsale.infrastructure.security.jwt.JwtTokenProvider;
+import kr.co.postofsale.member.enumClass.Gender;
 import kr.co.postofsale.member.enumClass.MemberRole;
-import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,6 +48,7 @@ public class MemberServiceImpl implements MemberService{
 
         String[] tokens = generateToken(memberEntity);
 
+        memberEntity.updateAccessToken(tokens[0]);
         memberEntity.updateRefreshToken(tokens[1]);
 
         return new MemberDto.TOKEN(tokens[0], tokens[1]);
@@ -89,18 +88,26 @@ public class MemberServiceImpl implements MemberService{
     @Transactional
     public void signUp(MemberDto.CREATE create){
 
+        Boolean exist = memberRepositoryImpl.existByPhone(create.getPhone());
+
         if(checkIdentity(create.getIdentity())){
-            throw new BadRequestException("중복");
+            throw new BadRequestException("ID 중복");
+        }
+        if(exist){
+            throw new BadRequestException("전화번호 중복");
+        }
+        if(!create.getPassword().equals(create.getCheckPassword())){
+            throw new BadRequestException("비밀번호와 확인 비밀번호가 서로 다릅니다.");
         }
 
         MemberEntity memberEntity = MemberEntity.builder()
                 .identity(create.getIdentity())
-                .password(create.getPassword())
+                .password(passwordEncoder.encode(create.getPassword()))
                 .name(create.getName())
-                .gender(create.getGender())
+                .gender(Gender.of(create.getGender()))
                 .birth(create.getBirth())
                 .phone(create.getPhone())
-                .memberRole(create.getMemberRole())
+                .memberRole(MemberRole.of(create.getMemberRole()))
                 .build();
 
         memberEntity.setInsertDate(new Timestamp(System.currentTimeMillis()));
@@ -202,7 +209,7 @@ public class MemberServiceImpl implements MemberService{
 
         MemberEntity memberEntity = MemberThreadLocal.get();
         memberEntity.updateMember(update);
-        memberRepositoryImpl.save(memberEntity);
+        memberRepositoryImpl.update(memberEntity);
     }
 
     /**
@@ -224,7 +231,7 @@ public class MemberServiceImpl implements MemberService{
         }
 
         memberEntity.updatePassword(passwordEncoder.encode(update_password.getNewPassword()));
-        memberRepositoryImpl.save(memberEntity);
+        memberRepositoryImpl.update(memberEntity);
     }
 
     /**
@@ -256,7 +263,35 @@ public class MemberServiceImpl implements MemberService{
             throw new BadRequestException("없는 권한입니다.");
         }
 
-        memberRepositoryImpl.save(memberEntity1);
+        memberRepositoryImpl.update(memberEntity1);
+    }
+
+    @Override
+    public void deleteMember(MemberDto.DELETE delete) {
+
+        MemberEntity memberEntity = MemberThreadLocal.get();
+
+        Optional<MemberEntity> member = memberRepositoryImpl.findByIdentity(delete.getIdentity());
+
+        if(member.isPresent()){
+            throw new BadRequestException("삭제할 아이디와 정보가 일치하지 않습니다.");
+        }
+
+        if(!memberEntity.getIdentity().equals(member.get().getIdentity())){
+            throw new BadRequestException("삭제할 아이디와 정보가 일치하지 않습니다.");
+        }
+
+        if(!memberEntity.getPassword().equals(member.get().getPassword())){
+            throw new BadRequestException("삭제할 아이디와 정보가 일치하지 않습니다.");
+        }
+
+        memberRepositoryImpl.update(memberEntity);
+
+    }
+
+    @Override
+    public void deleteAll() {
+        //to do
     }
 
 

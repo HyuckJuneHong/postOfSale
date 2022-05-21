@@ -39,10 +39,10 @@ public class MemberDto {
         private String birth;
         @ApiModelProperty(example = "MALE or FEMALE")
         @NotBlank(message = "성별을 입력하세요.")
-        private Gender gender;
+        private String gender;
         @ApiModelProperty(example = "ROLE_MEMBER or ROLE_MANAGER or ROLE_ADMIN")
         @NotBlank(message = "유저 권한을 입력해주세요.")
-        private MemberRole memberRole;
+        private String memberRole;
 
     }
 

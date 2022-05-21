@@ -29,8 +29,7 @@ public class JwtTokenProvider {
     @Value("${jwt.secret}")
     private String SECRET_KEY;
 
-    // To do What?
-    final String User = "memberId";
+    final String User = "identity";
 
     //토큰 유효시간 Ex) 60분 = 1000L * 60 * 60
     private final long ACCESS_EXPIRE = 1000 * 60 * 30; //엑세스 만료 (30분)
@@ -68,7 +67,7 @@ public class JwtTokenProvider {
     private Claims generateClaims(String identity, MemberRole role, String name){
         Claims claims = Jwts.claims();  //클레임은 name / value 의 한 쌍으로 이루어져 있다.
         claims.put(User, identity);
-        claims.put("role", role);
+        claims.put("role", role.toString());
         claims.put("name",name);
 
         return claims;
@@ -255,8 +254,11 @@ public class JwtTokenProvider {
 
         if(role.equals(MemberRole.ROLE_ADMIN)){
             set.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        }else if(role.equals(MemberRole.ROLE_MANAGER)) {
+            set.add(new SimpleGrantedAuthority("ROLE_MANAGER"));
+        }else{
+            set.add(new SimpleGrantedAuthority("ROLE_MEMBER"));
         }
-        set.add(new SimpleGrantedAuthority("ROLE_USER"));
 
         return set;
     }
