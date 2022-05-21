@@ -42,7 +42,6 @@ public class MemberRepositoryJDBC implements MemberRepository {
 
             memberEntity.setId(rs.getLong("id"));
             memberEntity.setInsertDate(rs.getTimestamp("insert_date"));
-            memberEntity.setDeleteDate(rs.getTimestamp("delete_date"));
             memberEntity.setUpdateDate(rs.getTimestamp("update_date"));
 
             return memberEntity;
@@ -67,7 +66,6 @@ public class MemberRepositoryJDBC implements MemberRepository {
         parameters.put("member_role", memberEntity.getMemberRole());
         parameters.put("insert_date", memberEntity.getInsertDate());
         parameters.put("update_date", memberEntity.getUpdateDate());
-        parameters.put("delete_date", memberEntity.getDeleteDate());
 
         Number key = simpleJdbcInsert.executeAndReturnKey(parameters);
         memberEntity.setId(key.longValue());

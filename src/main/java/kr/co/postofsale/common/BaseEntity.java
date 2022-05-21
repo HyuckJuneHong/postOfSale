@@ -12,6 +12,4 @@ public class BaseEntity {
     protected Long id;
     protected Timestamp insertDate;
     protected Timestamp updateDate;
-    protected Timestamp deleteDate;
-
 }
