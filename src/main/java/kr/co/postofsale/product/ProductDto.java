@@ -58,11 +58,9 @@ public class ProductDto {
         String name;
 
         @ApiModelProperty(example = "새 상품명")
-        @NotBlank(message = "새 상품명을 입력해주세요.")
         String newName;
 
         @ApiModelProperty(example = "새 상품 가격")
-        @NotBlank(message = "새 상품 가격을 입력해주세요.")
         Long price;
     }
 
