@@ -1,6 +1,5 @@
 package kr.co.postofsale.member;
 
-import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import kr.co.postofsale.common.ResponseFormat;
 import kr.co.postofsale.infrastructure.security.jwt.JwtTokenProvider;
