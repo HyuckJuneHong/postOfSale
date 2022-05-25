@@ -138,7 +138,7 @@ public class MemberDto {
 
         @ApiModelProperty(example = "변경할 권한: ROLE_MEMBER or ROLE_MANAGER")
         @NotBlank(message = "새로 부여할 권한을 입력하세요. ROLE_MEMBER or ROLE_MANAGER")
-        private MemberRole memberRole;
+        private String memberRole;
     }
 
     @AllArgsConstructor

@@ -6,12 +6,10 @@ import kr.co.postofsale.member.enumClass.MemberRole;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.sql.Timestamp;
 
 @Getter
-@Setter
 @NoArgsConstructor
 public class MemberEntity extends BaseEntity{
 
@@ -22,7 +20,6 @@ public class MemberEntity extends BaseEntity{
     private String birth;
     private Gender gender;
     private MemberRole memberRole;
-    private String accessToken;
     private String refreshToken;
 
     @Builder
@@ -42,9 +39,6 @@ public class MemberEntity extends BaseEntity{
         this.updateDate = new Timestamp(System.currentTimeMillis());
     }
 
-    public void updateAccessToken(String accessToken){
-        this.accessToken = accessToken;
-    }
     public void updateRefreshToken(String refreshToken){
         this.refreshToken = refreshToken;
     }

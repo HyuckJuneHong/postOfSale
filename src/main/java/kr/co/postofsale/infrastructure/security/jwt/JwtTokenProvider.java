@@ -35,10 +35,10 @@ public class JwtTokenProvider {
     private final long ACCESS_EXPIRE = 1000 * 60 * 30; //엑세스 만료 (30분)
     private final long REFRESH_EXPIRE = 1000 * 60 * 60 * 24 * 14; //새로고침 만료 (2주)
 
-    private final MemberRepository memberRepository;
+    private final MemberRepositoryJDBC memberRepository;
 
     @Autowired
-    public JwtTokenProvider(MemberRepository memberRepository) {
+    public JwtTokenProvider(MemberRepositoryJDBC memberRepository) {
         this.memberRepository = memberRepository;
     }
 

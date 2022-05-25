@@ -21,9 +21,4 @@ public class MemberThreadLocal {
     public static void remove(){
         threadLocal.remove();
     }
-
-    /*
-    To do
-    -> theadLocal 로그아웃 시 remove() 해주는 메소드
-     */
 }

@@ -1,21 +1,19 @@
-//package kr.co.postofsale.product;
-//
-//import kr.co.postofsale.infrastructure.exception.BadRequestException;
-//import kr.co.postofsale.product.productDto.InsertDto;
-//import org.springframework.beans.factory.annotation.Autowired;
-//
-//import java.time.LocalDate;
-//import java.util.ArrayList;
-//
-//public class ProductServiceImpl implements ProductService {
-//
-//    private ProductRepositoryImpl productRepositoryImpl;
-//
-//    @Autowired
-//    public ProductServiceImpl(ProductRepositoryImpl productRepositoryImpl){
-//        this.productRepositoryImpl = productRepositoryImpl;
-//    }
-//
+package kr.co.postofsale.product;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class ProductServiceImpl implements ProductService {
+
+    private final ProductRepository productRepositoryImpl;
+
+    @Autowired
+    public ProductServiceImpl(ProductRepository productRepositoryImpl) {
+        this.productRepositoryImpl = productRepositoryImpl;
+    }
+
+
 //    @Override
 //    public void insertProduct(InsertDto insert) {
 //        ProductEntity product = productRepositoryImpl.findByProduct(insert.getCodeName());
@@ -82,4 +80,4 @@
 //        System.out.println("[총 제품 종류: " + list.size() + "]");
 //        System.out.println("---------------------------");
 //    }
-//}
+}

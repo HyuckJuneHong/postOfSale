@@ -1,7 +1,6 @@
 package kr.co.postofsale.member;
 
 import kr.co.postofsale.infrastructure.exception.BadRequestException;
-import kr.co.postofsale.infrastructure.exception.NotFoundException;
 import kr.co.postofsale.infrastructure.interceptor.MemberThreadLocal;
 import kr.co.postofsale.infrastructure.security.jwt.JwtTokenProvider;
 import kr.co.postofsale.member.enumClass.Gender;
@@ -39,7 +38,7 @@ public class MemberServiceImpl implements MemberService{
     public MemberDto.TOKEN login(MemberDto.LOGIN login){
 
         MemberEntity memberEntity = memberRepositoryImpl.findByIdentity(login.getIdentity())
-                .orElseThrow(() -> new NotFoundException("MemberEntity"));
+                .orElseThrow(() -> new BadRequestException("없는 아이디입니다."));
 
         //boolean matches(rP, eP) : 저장소에서 얻은 인코딩된 암호도 인코딩된 원시 암호화 일치하는지 확인하는 메소드 (절대 디코딩되지 않음)
         if(!passwordEncoder.matches(login.getPassword(), memberEntity.getPassword())){
@@ -48,7 +47,6 @@ public class MemberServiceImpl implements MemberService{
 
         String[] tokens = generateToken(memberEntity);
 
-        memberEntity.updateAccessToken(tokens[0]);
         memberEntity.updateRefreshToken(tokens[1]);
 
         return new MemberDto.TOKEN(tokens[0], tokens[1]);
@@ -177,8 +175,7 @@ public class MemberServiceImpl implements MemberService{
 
         MemberEntity memberEntity = MemberThreadLocal.get();
 
-        if(!memberEntity.getMemberRole().equals(MemberRole.ROLE_MANAGER)
-                || !memberEntity.getMemberRole().equals(MemberRole.ROLE_ADMIN)){
+        if(memberEntity.getMemberRole().equals(MemberRole.ROLE_MEMBER)){
             throw new BadRequestException("권한이 없습니다. (매니저 혹은 관리자만 가능)");
         }
 
@@ -208,6 +205,12 @@ public class MemberServiceImpl implements MemberService{
     public void updateMember(MemberDto.UPDATE update){
 
         MemberEntity memberEntity = MemberThreadLocal.get();
+
+        Boolean exist = memberRepositoryImpl.existByPhone(update.getPhone());
+        if(exist){
+            throw new BadRequestException("전화번호 중복");
+        }
+
         memberEntity.updateMember(update);
         memberRepositoryImpl.update(memberEntity);
     }
@@ -255,9 +258,9 @@ public class MemberServiceImpl implements MemberService{
         }
 
         MemberEntity memberEntity1 = member.get();
-        if(update_role.getMemberRole().equals(MemberRole.ROLE_MEMBER)){
+        if(update_role.getMemberRole().equals("ROLE_MEMBER")){
             memberEntity1.updateRole(MemberRole.ROLE_MEMBER);
-        }else if(update_role.getMemberRole().equals(MemberRole.ROLE_MANAGER)){
+        }else if(update_role.getMemberRole().equals("ROLE_MANAGER")){
             memberEntity1.updateRole(MemberRole.ROLE_MANAGER);
         }else{
             throw new BadRequestException("없는 권한입니다.");
@@ -267,33 +270,28 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
+    @Transactional
     public void deleteMember(MemberDto.DELETE delete) {
 
         MemberEntity memberEntity = MemberThreadLocal.get();
 
         Optional<MemberEntity> member = memberRepositoryImpl.findByIdentity(delete.getIdentity());
 
-        if(member.isPresent()){
-            throw new BadRequestException("삭제할 아이디와 정보가 일치하지 않습니다.");
+        if(!member.isPresent()){
+            throw new BadRequestException("삭제할 아이디가 이미 존재하지 않는 아이디 입니다.");
         }
 
         if(!memberEntity.getIdentity().equals(member.get().getIdentity())){
             throw new BadRequestException("삭제할 아이디와 정보가 일치하지 않습니다.");
         }
 
-        if(!memberEntity.getPassword().equals(member.get().getPassword())){
-            throw new BadRequestException("삭제할 아이디와 정보가 일치하지 않습니다.");
+        if(!passwordEncoder.matches(delete.getPassword(), memberEntity.getPassword())){
+            throw new BadRequestException("삭제할 아이디와 비밀번호가 일치하지 않습니다.");
         }
 
-        memberRepositoryImpl.update(memberEntity);
+        memberRepositoryImpl.deleteByidentity(memberEntity.getIdentity());
 
     }
-
-    @Override
-    public void deleteAll() {
-        //to do
-    }
-
 
     /**
      * 토큰 발급 서비스

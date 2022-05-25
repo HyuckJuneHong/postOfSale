@@ -8,7 +8,7 @@ public interface MemberRepository {
     MemberEntity save(MemberEntity memberEntity);
 
     void update(MemberEntity memberEntity);
-    void deleteByidentity(MemberEntity memberEntity);
+    void deleteByidentity(String identity);
     void deleteAll();
 
     Optional<MemberEntity> findByIdentity(String identity);

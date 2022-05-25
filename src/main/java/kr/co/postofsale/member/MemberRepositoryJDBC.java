@@ -6,10 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.sql.DataSource;
 import java.util.HashMap;
@@ -73,21 +71,32 @@ public class MemberRepositoryJDBC implements MemberRepository {
     }
 
     @Override
+    @Transactional
     public void update(MemberEntity memberEntity) {
-        this.jdbcTemplate.update("update member " +
-                        "set password=?, name=?, phone=?, member_role=?, update_date=?" +
-                        "where identity=?"
-                , new Object[] { memberEntity.getPassword(), memberEntity.getName(), memberEntity.getPhone()
-                        , memberEntity.getMemberRole(), memberEntity.getUpdateDate()
-                        , memberEntity.getIdentity()});
+
+        if(memberEntity.getMemberRole().equals(MemberRole.ROLE_MEMBER)){
+            this.jdbcTemplate.update("update member " +
+                            "set password=?, name=?, phone=?, member_role=?, update_date=?" +
+                            "where identity=?"
+                    , new Object[] { memberEntity.getPassword(), memberEntity.getName(), memberEntity.getPhone()
+                            , "ROLE_MEMBER", memberEntity.getUpdateDate(), memberEntity.getIdentity()});
+        }else if(memberEntity.getMemberRole().equals(MemberRole.ROLE_MANAGER)){
+            this.jdbcTemplate.update("update member " +
+                            "set password=?, name=?, phone=?, member_role=?, update_date=?" +
+                            "where identity=?"
+                    , new Object[] { memberEntity.getPassword(), memberEntity.getName(), memberEntity.getPhone()
+                            , "ROLE_MANAGER", memberEntity.getUpdateDate(), memberEntity.getIdentity()});
+        }
     }
 
     @Override
-    public void deleteByidentity(MemberEntity memberEntity) {
-        this.jdbcTemplate.update("DELETE FROM member WHERE identity=?", memberEntity.getIdentity());
+    @Transactional
+    public void deleteByidentity(String identity) {
+        this.jdbcTemplate.update("DELETE FROM member WHERE identity=?", identity);
     }
 
     @Override
+    @Transactional
     public void deleteAll() {
         this.jdbcTemplate.update("DELETE from member");
     }
@@ -106,7 +115,6 @@ public class MemberRepositoryJDBC implements MemberRepository {
 
     @Override
     public Boolean existByIdentity(String identity) {
-
         List<MemberEntity> list = jdbcTemplate.query("select * from member where identity = ?"
                 , memberEntityRowMapper(), identity);
 

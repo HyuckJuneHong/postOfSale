@@ -20,6 +20,11 @@ public class ProductEntity extends BaseEntity {
         this.amount = amount;
     }
 
+    public void updateName(String name, Long price){
+        this.name = name;
+        this.price = price;
+    }
+
     public void updateAmount(Long amount){
         this.amount = amount;
     }

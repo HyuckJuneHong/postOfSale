@@ -6,9 +6,6 @@ spring:
     password : password
 
 jwt:
-  header: Authorization
-  #HS256 알고리즘을 사용할 것이기 때문에 256bit, 이상의 secret key를 사용해야 한다.
-  secret: youcantrevealthesecretkey1234012300040
-  token-validity-in-seconds: 86400
+  secret: ADBF#!@$DAOGEB@N!%^#$%$#*@K@!GDS<M
 
 

@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -25,9 +26,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final HandlerExceptionResolver handlerExceptionResolver;
 
     private static final String[] AUTH_ARR = {
-            "/swagger-resources/**",
+            "/pos",
+            "/swagger/**",
             "/swagger-ui.html",
-            "favicon.ico"
+            "/swagger-resources/**"
     };
 
     /**
@@ -53,6 +55,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("pos/**").permitAll()
                 .antMatchers("/*/login", "/*/signUp").permitAll()
+
+                .antMatchers(HttpMethod.OPTIONS).permitAll()    //CORS 프론트 단 (시큐리티) 따로 공부하기
 
                 .and() //지정된 필터 앞에 커스텀 필터를 추가
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, handlerExceptionResolver),
