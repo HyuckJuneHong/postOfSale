@@ -2,7 +2,6 @@ package kr.co.postofsale.member;
 
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import kr.co.postofsale.common.ResponseFormat;
 import kr.co.postofsale.infrastructure.security.jwt.JwtTokenProvider;
@@ -20,7 +19,7 @@ public class MemberController {
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
-    @ApiModelProperty("로그인")
+    @ApiOperation("로그인")
     @PostMapping("/login")
     public ResponseFormat<MemberDto.TOKEN> login(@RequestBody MemberDto.LOGIN login){
         return ResponseFormat.ok(memberService.login(login));
@@ -89,7 +88,7 @@ public class MemberController {
         return ResponseFormat.ok();
     }
 
-    @ApiModelProperty("권한 변경")
+    @ApiOperation("권한 변경")
     @PutMapping("/role")
     public ResponseFormat updateRole(@RequestBody MemberDto.UPDATE_ROLE update){
         memberService.updateMemberRoLe(update);
