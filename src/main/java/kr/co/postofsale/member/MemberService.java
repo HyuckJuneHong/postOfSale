@@ -12,7 +12,7 @@ public interface MemberService {
     //create service
     void signUp(MemberDto.CREATE create);                           //회원 가입
 
-        //read service
+    //read service
     MemberDto.READ getMemberSelf();                                 //자기 자신 정보 조회
     MemberDto.READ getMemberIdentity(String identity);              //아이디로 조회
     List<MemberDto.READ> getMemberAll();                            //모든 회원 정보 조회

@@ -3,7 +3,6 @@ package kr.co.postofsale.infrastructure.security;
 import kr.co.postofsale.infrastructure.security.jwt.JwtAuthenticationFilter;
 import kr.co.postofsale.infrastructure.security.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -53,7 +52,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .and()
                 .authorizeRequests()
-                .antMatchers("pos/**").permitAll()
+                .antMatchers("/").permitAll()
+                .antMatchers("/pos/**").permitAll()
                 .antMatchers("/*/login", "/*/signUp").permitAll()
 
                 .antMatchers(HttpMethod.OPTIONS).permitAll()    //CORS 프론트 단 (시큐리티) 따로 공부하기
