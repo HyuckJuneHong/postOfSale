@@ -1,5 +1,5 @@
 HELP.md
-!**/src/main/**/application.yml
+#!**/src/main/**/application.yml
 
 !**/src/main/**/target/
 !**/src/test/**/target/
