@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url : jdbc:mysql://database-test.czxdj33trick.ap-northeast-2.rds.amazonaws.com/hongdosanDB?verifyServerCertificate=false&useSSL=false&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
+    url : jdbc:mysql://database-test.czxdj33trick.ap-northeast-2.rds.amazonaws.com:localhost:3306/hongdosanDB?verifyServerCertificate=false&useSSL=false&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
     username : hongdosan
     password : hongdosan
 
