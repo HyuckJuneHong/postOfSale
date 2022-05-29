@@ -46,7 +46,7 @@ public class MemberController {
     }
 
     @ApiOperation("회원 탈퇴")
-    @PostMapping("/delete")
+    @DeleteMapping("/delete")
     public ResponseFormat delete(@RequestBody MemberDto.DELETE delete){
         memberService.deleteMember(delete);
         return ResponseFormat.ok();

@@ -10,7 +10,6 @@ import javax.validation.constraints.NotBlank;
 
 public class ProductDto {
 
-
     @Getter
     @Builder
     @AllArgsConstructor
@@ -46,7 +45,6 @@ public class ProductDto {
         String amount;
     }
 
-
     @Getter
     @Builder
     @AllArgsConstructor
@@ -61,7 +59,7 @@ public class ProductDto {
         String newName;
 
         @ApiModelProperty(example = "새 상품 가격")
-        Long price;
+        Long newPrice;
     }
 
     @Getter
@@ -75,6 +73,7 @@ public class ProductDto {
         String name;
 
         @ApiModelProperty(example = "판매 상품량 or 추가 상품량")
-        Long amount;
+        Long updateAmount;
     }
+
 }
