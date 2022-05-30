@@ -76,7 +76,7 @@ public class MemberRepositoryJDBC implements MemberRepository {
 
         if(memberEntity.getMemberRole().equals(MemberRole.ROLE_MEMBER)){
             this.jdbcTemplate.update("update member " +
-                            "set password=?, name=?, phone=?, member_role=?, update_date=?" +
+                            "set password=?, name=?, phone=?, member_role=?, update_date=? " +
                             "where identity=?"
                     , new Object[] { memberEntity.getPassword(), memberEntity.getName(), memberEntity.getPhone()
                             , "ROLE_MEMBER", memberEntity.getUpdateDate(), memberEntity.getIdentity()});

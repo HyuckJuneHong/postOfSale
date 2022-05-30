@@ -22,18 +22,15 @@ public class ProductEntity extends BaseEntity {
         this.amount = amount;
     }
 
-    public void updateAmount(Long amount){
-        this.amount = amount;
-        this.updateDate = new Timestamp(System.currentTimeMillis());
-    }
-
     public void updateProduct(ProductDto.UPDATE update){
-        if(!this.name.equals(update.getNewName())){
-            this.name = update.getNewName();
-            this.updateDate = new Timestamp(System.currentTimeMillis());
-        }
+
         if(!this.price.equals(update.getNewPrice())){
             this.price = update.getNewPrice();
+            this.updateDate = new Timestamp(System.currentTimeMillis());
+        }
+
+        if(!this.amount.equals(update.getNewAmount())){
+            this.amount = update.getNewAmount();
             this.updateDate = new Timestamp(System.currentTimeMillis());
         }
     }

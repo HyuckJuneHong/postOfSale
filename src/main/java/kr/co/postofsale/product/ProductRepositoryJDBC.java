@@ -62,7 +62,11 @@ public class ProductRepositoryJDBC implements ProductRepository{
     @Override
     @Transactional
     public void update(ProductEntity productEntity) {
-
+        this.jdbcTemplate.update("update product " +
+                "set price=?, amount=?, update_date=? " +
+                "where name=?"
+                , new Object[]{productEntity.getPrice(), productEntity.getAmount()
+                        ,productEntity.getUpdateDate(), productEntity.getName()});
     }
 
     @Override

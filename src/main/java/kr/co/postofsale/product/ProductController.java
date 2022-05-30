@@ -52,11 +52,4 @@ public class ProductController {
         productService.updateProduct(update);
         return ResponseFormat.ok();
     }
-
-    @ApiOperation("상품 수량 변경")
-    @PutMapping("amount")
-    public ResponseFormat updateAmount(@RequestBody ProductDto.UPDATE_AMOUNT update_amount){
-        productService.updateAmount(update_amount);
-        return ResponseFormat.ok();
-    }
 }
