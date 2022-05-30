@@ -38,6 +38,12 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void newInsert(ProductDto.CREATE create) {
 
+        MemberEntity memberEntity = MemberThreadLocal.get();
+
+        if(memberEntity.getMemberRole().equals(MemberRole.ROLE_MEMBER)){
+            throw new BadRequestException("관리자 및 매니저만 상품을 생성할 수 있습니다.");
+        }
+
         if(checkName(create.getName())){
             throw new BadRequestException("상품 이름 중복");
         }
