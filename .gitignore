@@ -1,5 +1,12 @@
 HELP.md
 #!**/src/main/**/application.yml
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/classes/
+!**/src/test/**/build/generated/
+!**/src/test/**/build/reports/
+!**/src/test/**/build/resources/
+!**/src/test/**/build/test-results/
+!**/src/test/**/build/tmp/
 
 ### STS ###
 .apt_generated
@@ -9,12 +16,18 @@ HELP.md
 .settings
 .springBeans
 .sts4-cache
+bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
 
 ### IntelliJ IDEA ###
 .idea
 *.iws
 *.iml
 *.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
 
 ### NetBeans ###
 /nbproject/private/
