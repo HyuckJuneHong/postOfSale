@@ -14,7 +14,7 @@ public class ProductDto {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class CREATE{
+    public static class INSERT{
 
         @ApiModelProperty(example = "상품명")
         @NotBlank(message = "생성할 상품 이름을 입력해주세요.")

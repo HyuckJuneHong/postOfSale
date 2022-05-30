@@ -22,7 +22,7 @@ public class ProductController {
 
     @ApiOperation("상품 생성")
     @PostMapping("/newInsert")
-    public ResponseFormat newInsert(@RequestBody ProductDto.CREATE create){
+    public ResponseFormat newInsert(@RequestBody ProductDto.INSERT create){
         productService.newInsert(create);
         return ResponseFormat.ok();
     }

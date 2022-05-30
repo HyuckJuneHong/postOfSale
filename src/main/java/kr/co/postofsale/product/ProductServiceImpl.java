@@ -36,7 +36,7 @@ public class ProductServiceImpl implements ProductService {
      * @param create
      */
     @Override
-    public void newInsert(ProductDto.CREATE create) {
+    public void newInsert(ProductDto.INSERT create) {
 
         MemberEntity memberEntity = MemberThreadLocal.get();
 

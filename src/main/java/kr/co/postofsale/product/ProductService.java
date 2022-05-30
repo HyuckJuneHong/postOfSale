@@ -8,7 +8,7 @@ public interface ProductService {
     Boolean checkName(String name);                             //이름 중복 체크
 
     //create service
-    void newInsert(ProductDto.CREATE create);                   //새 제품 생성
+    void newInsert(ProductDto.INSERT create);                   //새 제품 생성
 
     //read service
     ProductDto.READ getProductName(String name);                //이름으로 조회
