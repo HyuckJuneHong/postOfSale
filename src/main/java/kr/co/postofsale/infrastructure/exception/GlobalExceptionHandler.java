@@ -6,13 +6,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 /** @RestControllerAdvice
  * @ExceptionHandler가 하나의 클래스에 대한 것이라면, @ControllerAdvice는 모든 @Controller
- *  즉, 전역에서 발생할 수 있는 예외를 잡아 처리해주는 annotation이다.
+ *  즉, 전역에서 발생할 수 있는 예외를 잡아 처리해주는 annotation.
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     /**@ExceptionHandler
-     * GlovalExceptionHandler로 넘어온 예외가 NotFoundException 일 때, 해당 메소드가 실행된다.
+     * GlovalExceptionHandler로 넘어온 예외가 NotFoundException 일 때, 해당 메소드가 실행.
      * @param notFoundException
      * @return
      */
@@ -26,8 +26,4 @@ public class GlobalExceptionHandler {
     public ResponseFormat<Void> badRequestExcetpionHandler(BadRequestException badRequestException){
         return ResponseFormat.fail(badRequestException.getMessage());
     }
-
-    /**
-     * To do ...
-     */
 }

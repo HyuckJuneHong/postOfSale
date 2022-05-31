@@ -7,6 +7,7 @@ import java.util.Arrays;
 @AllArgsConstructor
 public enum SalePayment {
 
+    NO("결제전"),
     CARD("카드"),
     CASH("현금");
 

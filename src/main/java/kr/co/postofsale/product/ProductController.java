@@ -16,7 +16,7 @@ public class ProductController {
 
     @ApiOperation("상품 이름 중복 확인")
     @PostMapping("/name/check")
-    public ResponseFormat checkName(@RequestBody String name){
+    public ResponseFormat checkName(@RequestParam("name") String name){
         return ResponseFormat.ok(productService.checkName(name));
     }
 
@@ -29,14 +29,14 @@ public class ProductController {
 
     @ApiOperation("상품 삭제")
     @DeleteMapping("/delete")
-    public ResponseFormat delete(@RequestBody String name){
+    public ResponseFormat delete(@RequestParam("name") String name){
         productService.deleteProduct(name);
         return  ResponseFormat.ok();
     }
 
     @ApiOperation("상품 정보 조회")
     @GetMapping("/read")
-    public ResponseFormat<ProductDto.READ> getProductName(@RequestBody String name){
+    public ResponseFormat<ProductDto.READ> getProductName(@RequestParam("name") String name){
         return ResponseFormat.ok(productService.getProductName(name));
     }
 

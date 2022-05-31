@@ -28,13 +28,13 @@ public class MemberController {
 //    @ApiImplicitParams({
 //            @ApiImplicitParam(name = "Authorization", value = "사용자 인증을 위한 accessToken", paramType = "header", required = true)
 //    })
-    public ResponseFormat<Boolean> reCheckPassword(@RequestBody String password) {
+    public ResponseFormat<Boolean> reCheckPassword(@RequestParam("password") String password) {
         return ResponseFormat.ok(memberService.reCheckPassword(password));
     }
 
     @ApiOperation("아이디 중복 확인")
     @PostMapping("/idneity/check")
-    public ResponseFormat<Boolean> checkIdentity(@RequestBody String identity) {
+    public ResponseFormat<Boolean> checkIdentity(@RequestParam("identity") String identity) {
         return ResponseFormat.ok(memberService.checkIdentity(identity));
     }
 
@@ -63,7 +63,7 @@ public class MemberController {
 
     @ApiOperation("해당 아이디 회원 정보 조회")
     @GetMapping("/read")
-    public ResponseFormat<MemberDto.READ> getMemberIdentity(@RequestBody String identity){
+    public ResponseFormat<MemberDto.READ> getMemberIdentity(@RequestParam("identity") String identity){
         return ResponseFormat.ok(memberService.getMemberIdentity(identity));
     }
 

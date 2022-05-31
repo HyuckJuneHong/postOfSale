@@ -70,6 +70,11 @@ public class ProductRepositoryJDBC implements ProductRepository{
     }
 
     @Override
+    public void saleProduct(ProductEntity productEntity) {
+
+    }
+
+    @Override
     @Transactional
     public void deleteByName(String name) {
         this.jdbcTemplate.update("DELETE FROM product WHERE name=?", name);

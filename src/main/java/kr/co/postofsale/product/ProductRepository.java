@@ -8,6 +8,8 @@ public interface ProductRepository {
     ProductEntity save(ProductEntity productEntity);
 
     void update(ProductEntity productEntity);
+    void saleProduct(ProductEntity productEntity);
+
     void deleteByName(String name);
     void deleteAll();
 
