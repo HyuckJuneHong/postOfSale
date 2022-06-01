@@ -25,7 +25,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final HandlerExceptionResolver handlerExceptionResolver;
 
     private static final String[] AUTH_ARR = {
-            "/pos",
             "/swagger/**",
             "/swagger-ui.html",
             "/swagger-resources/**"
