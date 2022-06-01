@@ -51,7 +51,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .mvcMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()    //CORS 프론트 단 (시큐리티) 따로 공부하기
+                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                .antMatchers("/**").permitAll()//CORS 프론트 단 (시큐리티) 따로 공부하기
                 .antMatchers("/pos/**").permitAll()
                 .antMatchers("/*/login", "/*/signUp").permitAll()
 
