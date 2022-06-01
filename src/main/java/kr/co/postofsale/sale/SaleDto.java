@@ -53,10 +53,10 @@ public class SaleDto {
 
     }
 
-    @Builder
-    @Getter
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class DELETE {
-    }
+//    @Builder
+//    @Getter
+//    @AllArgsConstructor
+//    @NoArgsConstructor
+//    public static class DELETE {
+//    }
 }

@@ -1,13 +1,11 @@
 package kr.co.postofsale.sale;
 
 
-import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import kr.co.postofsale.common.ResponseFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Provider;
 import java.util.List;
 
 @RestController

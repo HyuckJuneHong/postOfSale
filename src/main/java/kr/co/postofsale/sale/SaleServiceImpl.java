@@ -153,8 +153,9 @@ public class SaleServiceImpl implements SaleService{
         return readList;
     }
 
-    @Override
-    public void deleteSale(SaleDto.DELETE delete) {
-
-    }
+//    @Override
+//    @Transactional
+//    public void deleteSale(SaleDto.DELETE delete) {
+//
+//    }
 }
