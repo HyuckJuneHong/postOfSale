@@ -171,7 +171,6 @@ public class MemberServiceImpl implements MemberService{
      */
     @Override
     public List<MemberDto.READ> getMemberAll() {
-        List<MemberEntity> memberList = memberRepositoryImpl.findAll();
 
         MemberEntity memberEntity = MemberThreadLocal.get();
 
@@ -179,7 +178,9 @@ public class MemberServiceImpl implements MemberService{
             throw new BadRequestException("권한이 없습니다. (매니저 혹은 관리자만 가능)");
         }
 
+        List<MemberEntity> memberList = memberRepositoryImpl.findAll();
         List<MemberDto.READ> memberReadList = new ArrayList<>();
+
         for(MemberEntity list : memberList){
             MemberDto.READ member = MemberDto.READ.builder()
                     .identity(list.getIdentity())

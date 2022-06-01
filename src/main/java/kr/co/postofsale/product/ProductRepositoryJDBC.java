@@ -71,7 +71,10 @@ public class ProductRepositoryJDBC implements ProductRepository{
 
     @Override
     public void saleProduct(ProductEntity productEntity) {
-
+        this.jdbcTemplate.update("update product " +
+                "set amount=? " +
+                "where name=?"
+                , new Object[]{productEntity.getAmount(), productEntity.getName()});
     }
 
     @Override

@@ -22,6 +22,10 @@ public class ProductEntity extends BaseEntity {
         this.amount = amount;
     }
 
+    public void updateAmount(Long amount){
+        this.amount = amount;
+    }
+
     public void updateProduct(ProductDto.UPDATE update){
 
         if(!this.price.equals(update.getNewPrice())){
