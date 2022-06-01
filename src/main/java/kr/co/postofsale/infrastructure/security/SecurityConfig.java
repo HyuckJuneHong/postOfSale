@@ -51,6 +51,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) //JWT 토큰 기반 인증이므로 세션 사용 안함
                 .and()
                 .authorizeRequests()
+                .mvcMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()    //CORS 프론트 단 (시큐리티) 따로 공부하기
                 .antMatchers("/pos/**").permitAll()
                 .antMatchers("/*/login", "/*/signUp").permitAll()
