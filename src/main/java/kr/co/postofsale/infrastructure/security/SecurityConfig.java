@@ -26,8 +26,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String[] AUTH_ARR = {
             "/swagger/**",
+            "/v2/api-docs",
+            "/configuration/ui",
+            "/swagger-resources/**",
+            "/configuration/security",
             "/swagger-ui.html",
-            "/swagger-resources/**"
+            "/webjars/**",
+            "favicon.ico"
     };
 
     /**
@@ -50,7 +55,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) //JWT 토큰 기반 인증이므로 세션 사용 안함
                 .and()
                 .authorizeRequests()
-                .mvcMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                .antMatchers().permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers("/**").permitAll()//CORS 프론트 단 (시큐리티) 따로 공부하기
                 .antMatchers("/pos/**").permitAll()
