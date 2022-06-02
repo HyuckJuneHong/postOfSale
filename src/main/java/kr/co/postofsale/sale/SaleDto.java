@@ -52,11 +52,4 @@ public class SaleDto {
         private SalePayment salePayment;
 
     }
-
-//    @Builder
-//    @Getter
-//    @AllArgsConstructor
-//    @NoArgsConstructor
-//    public static class DELETE {
-//    }
 }

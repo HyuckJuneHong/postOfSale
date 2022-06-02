@@ -14,6 +14,7 @@ public interface SaleService {
     List<SaleDto.READ> getSaleAll();                            //모든 구매 정보 조회
 
     //delete service
-//    void deleteSale(SaleDto.DELETE delete);                     //자신 구매 정보 삭제
+    void deleteMySelf(String password);                         //자신 구매 정보 삭제
+    void deleteAll();                                           //모든 구매 정보 삭제
 
 }

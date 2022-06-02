@@ -9,6 +9,8 @@ import kr.co.postofsale.product.ProductEntity;
 import kr.co.postofsale.product.ProductRepository;
 import kr.co.postofsale.sale.enumClass.SalePayment;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,13 +20,26 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
 public class SaleServiceImpl implements SaleService{
 
     private final SaleRepository saleRepository;
-    private final MemberRepository memberRepository;
-    private final ProductRepository productRepository;
 
+    @Autowired
+    private MemberRepository memberRepository;
+    @Autowired
+    private ProductRepository productRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    public SaleServiceImpl(SaleRepository saleRepository) {
+        this.saleRepository = saleRepository;
+    }
+
+    /**
+     * 판매 서비스
+     * @param add
+     */
     @Override
     @Transactional
     public void addBuy(SaleDto.ADD add) {
@@ -61,6 +76,10 @@ public class SaleServiceImpl implements SaleService{
         productRepository.saleProduct(product);
     }
 
+    /**
+     * 자신의 모든 구매 정보 조회
+     * @return
+     */
     @Override
     public List<SaleDto.READ> getSaleMySelf() {
 
@@ -81,6 +100,11 @@ public class SaleServiceImpl implements SaleService{
         return readList;
     }
 
+    /**
+     * 해당 아이디 구매 정보 조회
+     * @param identity
+     * @return
+     */
     @Override
     public List<SaleDto.READ> getSaleIdentity(String identity) {
 
@@ -105,6 +129,11 @@ public class SaleServiceImpl implements SaleService{
         return readList;
     }
 
+    /**
+     * 해당 상품 구매 정보 조회
+     * @param productName
+     * @return
+     */
     @Override
     public List<SaleDto.READ> getSaleProductName(String productName) {
 
@@ -129,6 +158,10 @@ public class SaleServiceImpl implements SaleService{
         return readList;
     }
 
+    /**
+     * 모든 구매 정보 조회
+     * @return
+     */
     @Override
     public List<SaleDto.READ> getSaleAll() {
 
@@ -153,9 +186,34 @@ public class SaleServiceImpl implements SaleService{
         return readList;
     }
 
-//    @Override
-//    @Transactional
-//    public void deleteSale(SaleDto.DELETE delete) {
-//
-//    }
+    /**
+     * 자신의 모든 구매 정보 삭제
+     * @param password
+     */
+    @Override
+    @Transactional
+    public void deleteMySelf(String password) {
+
+        MemberEntity memberEntity = MemberThreadLocal.get();
+        if(!passwordEncoder.matches(password, memberEntity.getPassword())){
+            throw new BadRequestException("비밀번호 일치하지 않음");
+        }
+
+        saleRepository.findByIdentity(memberEntity.getIdentity());
+
+    }
+
+    /**
+     * 모든 구매 정보 삭제
+     */
+    @Override
+    @Transactional
+    public void deleteAll() {
+        MemberEntity memberEntity = MemberThreadLocal.get();
+        if(memberEntity.getMemberRole().equals(MemberRole.ROLE_MEMBER)){
+            throw new BadRequestException("관리자 및 매니저만 모든 구매 정보를 삭제할 수 있습니다.");
+        }
+
+        saleRepository.deleteAll();
+    }
 }

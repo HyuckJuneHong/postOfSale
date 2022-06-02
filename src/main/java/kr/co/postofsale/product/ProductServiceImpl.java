@@ -3,8 +3,10 @@ package kr.co.postofsale.product;
 import kr.co.postofsale.infrastructure.exception.BadRequestException;
 import kr.co.postofsale.infrastructure.interceptor.MemberThreadLocal;
 import kr.co.postofsale.member.MemberEntity;
+import kr.co.postofsale.member.MemberRepository;
 import kr.co.postofsale.member.enumClass.MemberRole;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,10 +16,14 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepositoryImpl;
+
+    @Autowired
+    public ProductServiceImpl(ProductRepository productRepository) {
+        productRepositoryImpl = productRepository;
+    }
 
     /**
      * 상품 이름 체크
@@ -59,6 +65,11 @@ public class ProductServiceImpl implements ProductService {
 
     }
 
+    /**
+     * 해당 상품 정보 조회
+     * @param name
+     * @return
+     */
     @Override
     public ProductDto.READ getProductName(String name) {
 
@@ -77,6 +88,10 @@ public class ProductServiceImpl implements ProductService {
         return productName;
     }
 
+    /**
+     * 모든 상품 정보 조회
+     * @return
+     */
     @Override
     public List<ProductDto.READ> getProductAll() {
 
@@ -142,5 +157,20 @@ public class ProductServiceImpl implements ProductService {
 
         productRepositoryImpl.deleteByName(productEntity.get().getName());
 
+    }
+
+    /**
+     * 모든 상품 삭제
+     */
+    @Override
+    @Transactional
+    public void deleteAll() {
+        MemberEntity memberEntity = MemberThreadLocal.get();
+
+        if(memberEntity.getMemberRole().equals(MemberRole.ROLE_MEMBER)){
+            throw new BadRequestException("관리자 및 매니저만 상품을 삭제할 수 있습니다.");
+        }
+
+        productRepositoryImpl.deleteAll();
     }
 }

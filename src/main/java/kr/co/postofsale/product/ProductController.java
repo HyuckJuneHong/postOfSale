@@ -34,6 +34,13 @@ public class ProductController {
         return  ResponseFormat.ok();
     }
 
+    @ApiOperation("모든 상품 삭제")
+    @DeleteMapping("/delete/all")
+    public ResponseFormat deleteAll(){
+        productService.deleteAll();
+        return ResponseFormat.ok();
+    }
+
     @ApiOperation("상품 정보 조회")
     @GetMapping("/read")
     public ResponseFormat<ProductDto.READ> getProductName(@RequestParam("name") String name){
@@ -41,7 +48,7 @@ public class ProductController {
     }
 
     @ApiOperation("모든 상품 조회")
-    @GetMapping("productAll")
+    @GetMapping("/productAll")
     public ResponseFormat<List<ProductDto.READ>> getProductAll(){
      return ResponseFormat.ok(productService.getProductAll());
     }

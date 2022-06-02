@@ -80,4 +80,14 @@ public class SaleRepositoryJDBC implements SaleRepository{
     public List<SaleEntity> findAll() {
         return jdbcTemplate.query("select * from sale ", saleEntityRowMapper());
     }
+
+    @Override
+    public void deleteByMySelf(String identity) {
+        this.jdbcTemplate.update("DELETE FROM sale WHERE buy_Identity=?", identity);
+    }
+
+    @Override
+    public void deleteAll() {
+        this.jdbcTemplate.update("DELETE FROM sale");
+    }
 }

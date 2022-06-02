@@ -9,4 +9,7 @@ public interface SaleRepository {
     List<SaleEntity> findByProductName(String productName);
     List<SaleEntity> findByIdentity(String identity);
     List<SaleEntity> findAll();
+
+    void deleteByMySelf(String identity);
+    void deleteAll();
 }

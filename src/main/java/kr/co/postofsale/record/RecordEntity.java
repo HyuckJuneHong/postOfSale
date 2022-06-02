@@ -1,6 +1,7 @@
 package kr.co.postofsale.record;
 
 import kr.co.postofsale.common.BaseEntity;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -8,9 +9,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class RecordEntity extends BaseEntity {
 
-    private String name;
-    private Long daySale;
-    private Long weekSale;
-    private Long monthSale;
-    private Long yearSale;
+    private String bestSaleName;
+    private String bestSalePrice;
+    private Long daySalePrice;
+    private Long totalSalePrice;
+
+    @Builder
+    public RecordEntity(String bestSaleName, String bestSalePrice, Long daySalePrice, Long totalSalePrice) {
+        this.bestSaleName = bestSaleName;
+        this.bestSalePrice = bestSalePrice;
+        this.daySalePrice = daySalePrice;
+        this.totalSalePrice = totalSalePrice;
+    }
 }

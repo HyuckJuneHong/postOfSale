@@ -270,6 +270,10 @@ public class MemberServiceImpl implements MemberService{
         memberRepositoryImpl.update(memberEntity1);
     }
 
+    /**
+     * 회원 정보 삭제
+     * @param delete
+     */
     @Override
     @Transactional
     public void deleteMember(MemberDto.DELETE delete) {

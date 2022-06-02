@@ -53,11 +53,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .httpBasic().disable() //rest api만을 고려해 기본 설정은 해제
                 .csrf().disable()      //csrf 보안 토큰 disable 처리
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) //JWT 토큰 기반 인증이므로 세션 사용 안함
+
                 .and()
                 .authorizeRequests()
                 .antMatchers().permitAll()
-                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .antMatchers("/**").permitAll()//CORS 프론트 단 (시큐리티) 따로 공부하기
+                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll() //CORS 프론트 단 (시큐리티) 따로 공부하기
                 .antMatchers("/pos/**").permitAll()
                 .antMatchers("/*/login", "/*/signUp").permitAll()
 
