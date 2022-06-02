@@ -12,10 +12,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
  *  즉, 전역에서 발생할 수 있는 예외를 잡아 처리해주는 annotation.
  */
 @RestControllerAdvice
-@Log4j
 public class GlobalExceptionHandler {
 
-    Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+    private Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     /**@ExceptionHandler
      * GlovalExceptionHandler로 넘어온 예외가 NotFoundException 일 때, 해당 메소드가 실행.
