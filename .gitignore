@@ -1,12 +1,9 @@
 HELP.md
-#!**/src/main/**/application.yml
+.gradle
+build/
 !gradle/wrapper/gradle-wrapper.jar
-!**/src/main/**/build/classes/
-!**/src/test/**/build/generated/
-!**/src/test/**/build/reports/
-!**/src/test/**/build/resources/
-!**/src/test/**/build/test-results/
-!**/src/test/**/build/tmp/
+!**/src/main/**/build/
+!**/src/test/**/build/
 
 ### STS ###
 .apt_generated
