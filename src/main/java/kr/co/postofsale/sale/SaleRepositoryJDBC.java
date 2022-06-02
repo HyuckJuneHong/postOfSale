@@ -65,7 +65,7 @@ public class SaleRepositoryJDBC implements SaleRepository{
 
     @Override
     public List<SaleEntity> findByProductName(String productName) {
-        return jdbcTemplate.query("select * from sale where buy_prdocut_name = ? "
+        return jdbcTemplate.query("select * from sale where buy_product_name = ? "
                 , saleEntityRowMapper(), productName);
     }
 
@@ -82,7 +82,7 @@ public class SaleRepositoryJDBC implements SaleRepository{
 
     @Override
     public void deleteByMySelf(String identity) {
-        this.jdbcTemplate.update("DELETE FROM sale WHERE buy_Identity=?", identity);
+        this.jdbcTemplate.update("DELETE FROM sale WHERE buy_identity=?", identity);
     }
 
     @Override
