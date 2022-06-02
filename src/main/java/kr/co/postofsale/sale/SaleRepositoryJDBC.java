@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-@Repository
 public class SaleRepositoryJDBC implements SaleRepository{
 
     private final JdbcTemplate jdbcTemplate;
