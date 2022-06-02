@@ -8,6 +8,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -26,10 +28,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtTokenProvider jwtTokenProvider;
     private final HandlerExceptionResolver handlerExceptionResolver;
 
+    private Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
+
     //Request로 들어오는 Jwt Token의 유효성을 검증(jwtTokenProvider.validateToken)하는 filter를 filterChain에 등록한다.
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
+
+        logger.info("메세지 ~!~!~!");
 
         // 헤더에서 JWT를 받아옴.
         final Optional<String> token = jwtTokenProvider.resolveToken(request);
