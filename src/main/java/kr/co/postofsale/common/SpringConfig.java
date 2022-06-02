@@ -36,23 +36,23 @@ public class SpringConfig {
         return new MemberRepositoryJDBC(dataSource);
     }
 
-//    @Bean
-//    public ProductServiceImpl productService(){
-//        return new ProductServiceImpl(productRepository());
-//    }
-//
-//    @Bean
-//    public ProductRepository productRepository(){
-//        return new ProductRepositoryJDBC(dataSource);
-//    }
-//
-//    @Bean
-//    public SaleServiceImpl saleService(){
-//        return new SaleServiceImpl(saleRepository());
-//    }
-//
-//    @Bean
-//    public SaleRepository saleRepository(){
-//        return new SaleRepositoryJDBC(dataSource);
-//    }
+    @Bean
+    public ProductServiceImpl productService(){
+        return new ProductServiceImpl(productRepository());
+    }
+
+    @Bean
+    public ProductRepository productRepository(){
+        return new ProductRepositoryJDBC(dataSource);
+    }
+
+    @Bean
+    public SaleServiceImpl saleService(){
+        return new SaleServiceImpl(saleRepository());
+    }
+
+    @Bean
+    public SaleRepository saleRepository(){
+        return new SaleRepositoryJDBC(dataSource);
+    }
 }
