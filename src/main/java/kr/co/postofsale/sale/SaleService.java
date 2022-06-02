@@ -5,7 +5,7 @@ import java.util.List;
 public interface SaleService {
 
     //create service
-    void addBuy(SaleDto.ADD add);                               //구매 정보 생성
+    Long addBuy(SaleDto.ADD add);                               //구매 정보 생성
 
     //read service
     List<SaleDto.READ> getSaleMySelf();                         //자신이 구매한 정보 조회

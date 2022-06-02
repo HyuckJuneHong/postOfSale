@@ -15,11 +15,11 @@ public class SaleController {
     @Autowired
     private SaleServiceImpl saleService;
 
-    @ApiOperation("구매할 상품 추가")
+    @ApiOperation("구매할 상품")
     @PostMapping("buy")
-    public ResponseFormat addBuy(@RequestBody SaleDto.ADD add) {
-        saleService.addBuy(add);
-        return ResponseFormat.ok();
+    public ResponseFormat<String> addBuy(@RequestBody SaleDto.ADD add) {
+        Long totalPrice = saleService.addBuy(add);
+        return ResponseFormat.ok("총 가격: " + totalPrice + "원 입니다.");
     }
 
     @ApiOperation("자신이 구매한 상품 목록")

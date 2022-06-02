@@ -40,7 +40,7 @@ public class SaleServiceImpl implements SaleService{
      */
     @Override
     @Transactional
-    public void addBuy(SaleDto.ADD add) {
+    public Long addBuy(SaleDto.ADD add) {
 
         MemberEntity memberEntity = MemberThreadLocal.get();
 
@@ -72,6 +72,8 @@ public class SaleServiceImpl implements SaleService{
 
         saleRepository.save(saleEntity);
         productRepository.saleProduct(product);
+
+        return saleEntity.getTotalPrice();
     }
 
     /**
@@ -92,6 +94,7 @@ public class SaleServiceImpl implements SaleService{
                     .buyProductName(sale.getBuyProductName())
                     .buyAmount(sale.getBuyAmount())
                     .salePayment(sale.getSalePayment())
+                    .totalPrice(sale.getTotalPrice())
                     .build();
             readList.add(read);
         }
@@ -121,6 +124,7 @@ public class SaleServiceImpl implements SaleService{
                     .buyProductName(sale.getBuyProductName())
                     .buyAmount(sale.getBuyAmount())
                     .salePayment(sale.getSalePayment())
+                    .totalPrice(sale.getTotalPrice())
                     .build();
             readList.add(read);
         }
@@ -150,6 +154,7 @@ public class SaleServiceImpl implements SaleService{
                     .buyProductName(sale.getBuyProductName())
                     .buyAmount(sale.getBuyAmount())
                     .salePayment(sale.getSalePayment())
+                    .totalPrice(sale.getTotalPrice())
                     .build();
             readList.add(read);
         }
@@ -178,6 +183,7 @@ public class SaleServiceImpl implements SaleService{
                     .buyProductName(sale.getBuyProductName())
                     .buyAmount(sale.getBuyAmount())
                     .salePayment(sale.getSalePayment())
+                    .totalPrice(sale.getTotalPrice())
                     .build();
             readList.add(read);
         }

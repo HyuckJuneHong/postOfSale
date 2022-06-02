@@ -17,11 +17,11 @@ public class SaleDto {
     @NoArgsConstructor
     public static class ADD {
 
-        @ApiModelProperty(example = "장바구니에 넣을 상품명")
+        @ApiModelProperty(example = "구매할 상품명")
         @NotBlank(message = "장바구니에 담을 상품명을 입력해주세요.")
         private String buyProductName;
 
-        @ApiModelProperty(example = "장바구니에 담을 상품량")
+        @ApiModelProperty(example = "구매할 상품량")
         @NotBlank(message = "장바구니에 담을 상품량을 입력해주세요.")
         private Long buyAmount;
 
