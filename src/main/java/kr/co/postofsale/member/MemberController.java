@@ -33,7 +33,7 @@ public class MemberController {
     }
 
     @ApiOperation("아이디 중복 확인")
-    @PostMapping("/idneity/check")
+    @PostMapping("/identity/check")
     public ResponseFormat<Boolean> checkIdentity(@RequestParam("identity") String identity) {
         return ResponseFormat.ok(memberService.checkIdentity(identity));
     }
