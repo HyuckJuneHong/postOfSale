@@ -16,7 +16,7 @@ public class ProductController {
 
     @ApiOperation("상품 이름 중복 확인")
     @PostMapping("/name/check")
-    public ResponseFormat checkName(@RequestParam("name") String name){
+    public ResponseFormat<Boolean> checkName(@RequestParam("name") String name){
         return ResponseFormat.ok(productService.checkName(name));
     }
 
