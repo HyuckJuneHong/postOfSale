@@ -103,7 +103,7 @@ public class ProductRepositoryJDBC implements ProductRepository{
 
     @Override
     public Boolean existByName(String name) {
-        List<ProductEntity> list = jdbcTemplate.query("select * from member where name = ?"
+        List<ProductEntity> list = jdbcTemplate.query("select * from product where name = ?"
                 , productEntityRowMapper(), name);
 
         return list.isEmpty() ? false : true;
